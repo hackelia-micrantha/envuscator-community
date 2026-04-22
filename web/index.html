@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Envuscator</title>
+    <meta
+      name="description"
+      content="Developer tool for baking environment-bound obfuscation into mobile application builds."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <main class="page">
+      <header class="panel">
+        <div class="panel-bar">
+          envuscator :: randomized mobile obfuscation :: environment-bound builds
+        </div>
+        <div class="header-inner">
+          <div>
+            <p class="eyebrow">Enuscator</p>
+            <p class="header-copy">
+              Developer tool for baking environment-bound obfuscation into mobile
+              application builds.
+            </p>
+          </div>
+
+          <div class="header-actions">
+            <a class="button button-primary" href="https://envuscator.micrantha.com">
+              Open demo
+            </a>
+            <a
+              class="button button-secondary"
+              href="mailto:waitlist@envuscator.com?subject=Envuscator%20Waitlist&amp;body=Name%3A%0ACompany%20or%20project%3A%0AWhat%20kind%20of%20mobile%20app%20are%20you%20building%3F%0AWhy%20do%20you%20want%20to%20join%20the%20waitlist%3F%0A"
+            >
+              Join waitlist
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <section class="panel" id="content">
+        <div class="split">
+          <div class="content-main">
+            <p class="section-label">Mobile build security layer</p>
+            <h1 class="hero-title">
+              Randomize obfuscation inside the build path before the mobile binary
+              ships.
+            </h1>
+            <p class="hero-copy">
+              Enuscator lets teams add a dummy SDK, then use GitHub Actions to replace
+              it with build-specific configuration that ends up inside
+              compiler-obfuscated mobile output. The result is not a complete
+              solution. It is one fast way to add depth.
+            </p>
+
+            <div class="cta-row">
+              <a class="button button-primary" href="https://envuscator.micrantha.com">
+                Get lifetime access for beer money
+              </a>
+              <a
+                class="button button-secondary"
+                href="mailto:waitlist@envuscator.com?subject=Envuscator%20Waitlist&amp;body=Name%3A%0ACompany%20or%20project%3A%0AWhat%20kind%20of%20mobile%20app%20are%20you%20building%3F%0AWhy%20do%20you%20want%20to%20join%20the%20waitlist%3F%0A"
+              >
+                Join the waitlist
+              </a>
+            </div>
+
+            <div class="summary-block">
+              <div class="summary-grid">
+                <div>
+                  quick summary: add a dummy SDK, let CI swap the real config, output
+                  a compiler-obfuscated binary with per-build variation.
+                </div>
+                <div class="mini-panel">
+                  <p class="mini-label">build path</p>
+                  <p class="mini-copy">
+                    dummy SDK → actions swap → obfuscated binary
+                  </p>
+                </div>
+              </div>
+
+              <div class="secondary-links">
+                <p class="mini-label">secondary actions</p>
+                <div class="link-row">
+                  <a
+                    href="mailto:waitlist@envuscator.com?subject=Envuscator%20Waitlist&amp;body=Name%3A%0ACompany%20or%20project%3A%0AWhat%20kind%20of%20mobile%20app%20are%20you%20building%3F%0AWhy%20do%20you%20want%20to%20join%20the%20waitlist%3F%0A"
+                  >
+                    Join the waitlist
+                  </a>
+                  <span>/</span>
+                  <a
+                    href="mailto:contact@envuscator.com?subject=Envuscator%20Demo%20Request&amp;body=Name%3A%0ACompany%20or%20project%3A%0AWhat%20do%20you%20want%20to%20see%20in%20the%20demo%3F%0AWhat%20platform%20or%20workflow%20are%20you%20using%20today%3F%0A"
+                  >
+                    Request demo
+                  </a>
+                  <span>/</span>
+                  <a
+                    href="mailto:contact@envuscator.com?subject=Envuscator%20Contact&amp;body=Name%3A%0AReason%20for%20reaching%20out%3A%0AQuestion%20or%20message%3A%0A"
+                  >
+                    Contact
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="content-side">
+            <p class="section-label">Current state</p>
+            <div class="side-copy">
+              <p>
+                The app is live as a demo right now. The demo entry will turn into
+                the real login flow later.
+              </p>
+              <p>
+                This page is product-first by design, but it also doubles as a job
+                search artifact: the point is to show judgment, technical framing,
+                and execution.
+              </p>
+              <p>
+                Intended readers: mobile developers, platform/tooling teams, and
+                security enthusiasts who want another moving part in the right place.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <p class="section-label">How it works</p>
+          <h2>The integration model stays simple.</h2>
+        </div>
+        <div class="three-up">
+          <article class="step-card">
+            <p class="step-label">01</p>
+            <h3>Add the dummy SDK</h3>
+            <p>
+              Integrate a lightweight placeholder into the mobile app instead of
+              wiring the full configuration by hand.
+            </p>
+          </article>
+          <article class="step-card">
+            <p class="step-label">02</p>
+            <h3>Let GitHub Actions swap it</h3>
+            <p>
+              CI replaces the dummy SDK with the build-specific configuration during
+              the pipeline instead of inside product code.
+            </p>
+          </article>
+          <article class="step-card">
+            <p class="step-label">03</p>
+            <h3>Ship a randomized build</h3>
+            <p>
+              Each output bakes environment-bound data into compiler-obfuscated
+              binaries with variation per build.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="split">
+          <div class="content-main compact">
+            <p class="section-label">Why this matters</p>
+            <ul class="reason-list">
+              <li>Randomized per build instead of static once-and-done obfuscation</li>
+              <li>Adds one useful security layer without pretending to solve everything</li>
+              <li>Fits developers, platform teams, and security-curious mobile builders</li>
+            </ul>
+          </div>
+          <aside class="content-side">
+            <p class="section-label">Honest scope</p>
+            <p class="side-single">
+              Enuscator is one piece of a full solution. It should be understood as a
+              fast security layer, not a claim that obfuscation alone makes an app
+              secure.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel panel-last">
+        <div class="split">
+          <div class="content-main compact">
+            <p class="section-label">Next step</p>
+            <h2>Support the project, join the waitlist, or get in touch.</h2>
+            <p class="next-copy">
+              The primary path is the beer-ware subscription. The secondary paths
+              are here for people who want early access, want to request a demo, or
+              want to contact me directly.
+            </p>
+
+            <div class="cta-row wrap">
+              <a class="button button-primary" href="https://envuscator.micrantha.com">
+                Support the project
+              </a>
+              <a
+                class="button button-secondary"
+                href="mailto:waitlist@envuscator.com?subject=Envuscator%20Waitlist&amp;body=Name%3A%0ACompany%20or%20project%3A%0AWhat%20kind%20of%20mobile%20app%20are%20you%20building%3F%0AWhy%20do%20you%20want%20to%20join%20the%20waitlist%3F%0A"
+              >
+                Join the waitlist
+              </a>
+              <a
+                class="button button-secondary"
+                href="mailto:contact@envuscator.com?subject=Envuscator%20Demo%20Request&amp;body=Name%3A%0ACompany%20or%20project%3A%0AWhat%20do%20you%20want%20to%20see%20in%20the%20demo%3F%0AWhat%20platform%20or%20workflow%20are%20you%20using%20today%3F%0A"
+              >
+                Request demo
+              </a>
+              <a
+                class="button button-secondary"
+                href="mailto:contact@envuscator.com?subject=Envuscator%20Contact&amp;body=Name%3A%0AReason%20for%20reaching%20out%3A%0AQuestion%20or%20message%3A%0A"
+              >
+                Contact
+              </a>
+            </div>
+          </div>
+
+          <aside class="content-side">
+            <p class="section-label">Notes</p>
+            <ul class="note-list">
+              <li>Mobile friendly by default.</li>
+              <li>Developer-tool voice over SaaS polish.</li>
+              <li>Primary CTA is intentionally unconventional.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,396 @@
+:root {
+  --bg: #f7f3e8;
+  --panel: #fffdf7;
+  --panel-alt: #efe8d6;
+  --text: #111111;
+  --muted: rgba(17, 17, 17, 0.74);
+  --subtle: rgba(17, 17, 17, 0.64);
+  --line: #111111;
+  --accent: #0b6b61;
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.25rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 2.5rem;
+  --container: 72rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 0.75rem 1rem;
+}
+
+.page {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.panel {
+  margin-top: 1rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.panel-last {
+  margin-bottom: 1.5rem;
+}
+
+.panel-bar {
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-alt);
+  padding: 0.55rem 1rem;
+  font-family:
+    "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+.header-inner,
+.split {
+  display: grid;
+  gap: 0;
+}
+
+.header-inner {
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.eyebrow,
+.section-label,
+.mini-label,
+.step-label {
+  font-family:
+    "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+}
+
+.header-copy,
+.hero-copy,
+.next-copy,
+.side-single,
+.side-copy p,
+.step-card p,
+.reason-list li,
+.note-list li {
+  color: var(--muted);
+}
+
+.header-copy {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+}
+
+.header-actions,
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  padding: 0.9rem 1.25rem;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.button-primary {
+  background: var(--text);
+  color: #ffffff;
+}
+
+.button-primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.button-secondary:hover {
+  background: var(--text);
+  color: #ffffff;
+}
+
+.content-main,
+.content-side,
+.section-head,
+.step-card {
+  padding: 1.25rem;
+}
+
+.content-main {
+  min-width: 0;
+}
+
+.hero-title {
+  margin: 1rem 0 0;
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  line-height: 1.08;
+  font-weight: 600;
+}
+
+.hero-copy,
+.next-copy {
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
+  line-height: 2;
+}
+
+.summary-block {
+  margin-top: 2rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1rem;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.mini-panel,
+.content-side {
+  background: var(--panel-alt);
+}
+
+.mini-panel {
+  border: 1px solid var(--line);
+  padding: 0.75rem;
+}
+
+.mini-label,
+.section-label {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  color: var(--subtle);
+}
+
+.mini-copy {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.secondary-links {
+  margin-top: 1rem;
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+.link-row a {
+  text-decoration: underline;
+  text-decoration-color: rgba(17, 17, 17, 0.3);
+  text-underline-offset: 0.25rem;
+}
+
+.link-row a:hover {
+  text-decoration-color: rgba(17, 17, 17, 1);
+}
+
+.link-row span {
+  color: rgba(17, 17, 17, 0.35);
+  font-family:
+    "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.content-side {
+  border-top: 1px solid var(--line);
+}
+
+.side-copy {
+  margin-top: 1rem;
+  display: grid;
+  gap: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.9;
+}
+
+.side-copy p,
+.side-single {
+  margin: 0;
+}
+
+.section-head {
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head h2,
+.content-main h2 {
+  margin: 0.75rem 0 0;
+  font-size: clamp(1.7rem, 2.5vw, 2.2rem);
+  line-height: 1.2;
+}
+
+.three-up {
+  display: grid;
+}
+
+.step-card {
+  border-top: 1px solid var(--line);
+}
+
+.step-card h3 {
+  margin: 0.75rem 0 0;
+  font-size: 1.25rem;
+}
+
+.step-card p:last-child {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.9;
+}
+
+.step-label {
+  margin: 0;
+  font-size: 0.875rem;
+  letter-spacing: 0.18em;
+  color: rgba(17, 17, 17, 0.6);
+}
+
+.compact .section-label {
+  margin-bottom: 0;
+}
+
+.reason-list,
+.note-list {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reason-list li,
+.note-list li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.reason-list li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text);
+  font-family:
+    "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.note-list li::before {
+  content: "-";
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.wrap {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .page {
+    padding: 1rem 1.5rem;
+  }
+
+  .header-inner,
+  .content-main,
+  .content-side,
+  .section-head,
+  .step-card {
+    padding: 1.5rem;
+  }
+
+  .header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+}
+
+@media (min-width: 768px) {
+  .summary-grid {
+    grid-template-columns: minmax(0, 1fr) 220px;
+  }
+
+  .three-up {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .step-card {
+    border-top: 0;
+    border-right: 1px solid var(--line);
+  }
+
+  .step-card:last-child {
+    border-right: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+
+  .content-main {
+    border-right: 1px solid var(--line);
+  }
+
+  .content-side {
+    border-top: 0;
+  }
+}
