@@ -1,12 +1,30 @@
 # Envuscator Community
 
-Public product, documentation, and release surface for Envuscator.
+**Public product, documentation, and release surface for Envuscator.**
 
-Envuscator is building a runner-local mobile security layer that adds randomized, environment-bound obfuscation to Android and iOS build pipelines. Native generation exists today; the provider-neutral engine contract, GitHub/GitLab adapters, signed distribution, entitlement service, and Rust orchestration migration are being delivered incrementally.
+Envuscator is an incubating Micrantha Solution that adds a mobile build-time obfuscation layer to Android and iOS delivery pipelines. Native generation exists today; the provider-neutral engine contract, GitHub and GitLab adapters, signed distribution, entitlement service, deterministic evidence, and Rust orchestration migration are being delivered incrementally.
+
+It is an additional defense layer, not a substitute for secure backend design, platform attestation, secret rotation, or the assumption that application binaries and shipped configuration can eventually be inspected.
+
+## Product role
+
+Envuscator is designed to make selected mobile configuration extraction less predictable and more expensive while fitting into customer-controlled build pipelines.
+
+The target product boundary includes:
+
+- a provider-neutral native engine;
+- Android and iOS artifact generation;
+- a local command-line interface;
+- a GitHub Action adapter;
+- a GitLab CI/CD Component adapter;
+- licensing and entitlement verification;
+- normalized manifests, checksums, SBOM metadata, and provenance where available.
+
+Implementation remains in progress; this repository does not claim that every commercial surface or target security property is generally available today.
 
 ## Public website
 
-The static site lives in [`web/`](./web):
+The authoritative static site lives in [`web/`](./web):
 
 - `web/index.html`
 - `web/styles.css`
@@ -15,16 +33,27 @@ It separates current foundations, work in progress, and target-v1 architecture s
 
 ## Deployment contract
 
-This repository is the intended authoritative public documentation and product surface.
-
 - Source directory: `web/`
 - Build step: none
 - Output directory: `web/`
-- Deployment target: static hosting such as Cloudflare Pages or GitHub Pages
+- Cloudflare configuration: [`wrangler.toml`](./wrangler.toml)
 - Production hostname: to be finalized as part of the duplicate-site retirement tracked in issue #2
 - `https://envuscator.micrantha.com`: currently a separate concept/demo application and not evidence that the complete runner-local v1 architecture is deployed
 
-Until the production hostname and hosting integration are finalized, merging website changes updates the authoritative source but may not update the currently linked demo application.
+The Cloudflare Workers integration serves `web/` as static assets. This repository is the intended authoritative public documentation and product surface.
+
+## Delivery and commercial model
+
+The v1 commercial surface is being designed around **licensed CI adapters** rather than hosted customer builds:
+
+| Surface | Target delivery model |
+| --- | --- |
+| GitHub | Versioned GitHub Action using workload identity for entitlement exchange |
+| GitLab | Versioned GitLab CI/CD Component using GitLab job identity |
+| Local | CLI using the same provider-neutral execution contract |
+| Web | Licensing, entitlement, account, and product information only |
+
+Customer source code, protected mobile configuration, generated artifacts, and build logs remain on customer-controlled runners in the target v1 trust boundary. Adapters resolve and verify immutable engine releases and must not require consumer personal access tokens to check out mutable private engine source.
 
 ## Architecture principles
 
@@ -40,7 +69,9 @@ Until the production hostname and hosting integration are finalized, merging web
 - GitHub and GitLab adapters consume the same provider-neutral engine contract.
 - Engine releases are immutable, checksummed, signed, and independently verifiable.
 - Generated artifacts include deterministic manifests without configuration values.
+- Plaintext temporary material is permission-restricted, leak-scanned, and cleanup-verified.
 - The orchestration boundary migrates incrementally to Rust behind conformance tests.
+- Hosted customer build orchestration remains outside the v1 trust boundary.
 
 ## Project boundaries
 
@@ -50,6 +81,13 @@ Until the production hostname and hosting integration are finalized, merging web
 | `envuscator-community` | Public static content | Authoritative website, documentation, examples, verification material, and release surface |
 | `envuscator-web` | Existing demo/application code | Minimal licensing and entitlement service with no hosted customer builds or configuration storage |
 
+## Relationship to other Micrantha projects
+
+- **Digitalis** addresses device attestation and secure runtime configuration delivery.
+- **Veil** explores privacy-preserving image concealment.
+- **Bluebell** provides reusable Kotlin Multiplatform build and SDK patterns.
+- **Mobuild** provides the wider modular mobile-build architecture in which Envuscator originated.
+
 ## Validation
 
 The repository includes a dependency-free validation script and GitHub Actions workflow.
@@ -58,15 +96,7 @@ The repository includes a dependency-free validation script and GitHub Actions w
 python3 scripts/verify_site.py
 ```
 
-The validation checks:
-
-- HTML parses successfully
-- internal fragment links resolve
-- required metadata and headings exist
-- the architecture is represented as an ordered list
-- stylesheet references resolve
-- CSS braces are balanced
-- current-state and target-state labels remain present
+Validation checks include HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, Micrantha brand tokens, and current-versus-target state labels.
 
 ## Local preview
 
@@ -75,6 +105,10 @@ python3 -m http.server 8080 --directory web
 ```
 
 Then open `http://localhost:8080`.
+
+## Status
+
+Envuscator is **Incubating**. Its provider-neutral adapter contract, customer-runner trust boundary, GitHub/GitLab parity, immutable engine model, and licensing direction are accepted architectural decisions under active implementation.
 
 ## Contact
 
