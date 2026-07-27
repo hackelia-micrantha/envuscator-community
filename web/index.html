@@ -3,11 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fcfbf7" />
     <title>Envuscator — randomized mobile build obfuscation</title>
     <meta
       name="description"
-      content="Envuscator adds per-build variation and environment-bound configuration to Android and iOS binaries from customer-controlled GitHub and GitLab runners."
+      content="Envuscator is building a runner-local mobile security layer that adds per-build variation and environment-bound configuration to Android and iOS artifacts."
     />
+    <meta property="og:title" content="Envuscator — randomized mobile build obfuscation" />
+    <meta
+      property="og:description"
+      content="A runner-local mobile build security layer designed for GitHub Actions and GitLab CI/CD."
+    />
+    <meta property="og:type" content="website" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -15,7 +22,7 @@
 
     <main class="page">
       <header class="site-header">
-        <a class="brand" href="#content" aria-label="Envuscator home">
+        <a class="brand" href="./" aria-label="Envuscator">
           <span class="brand-mark" aria-hidden="true">E</span>
           <span>
             <strong>Envuscator</strong>
@@ -23,8 +30,8 @@
           </span>
         </a>
         <nav aria-label="Primary navigation">
-          <a href="#outcomes">Outcomes</a>
-          <a href="#architecture">Architecture</a>
+          <a href="#available">Available now</a>
+          <a href="#architecture">Target architecture</a>
           <a href="#roadmap">Roadmap</a>
           <a href="https://github.com/hackelia-micrantha/envuscator-community">GitHub</a>
         </nav>
@@ -36,137 +43,120 @@
         </div>
         <div class="hero-copy">
           <p class="eyebrow">Envuscator mobile security</p>
-          <h1>Build-specific obfuscation without handing over your secrets.</h1>
+          <h1>Build-specific obfuscation without creating another secrets boundary.</h1>
           <p class="lede">
-            Envuscator runs inside customer-controlled GitHub Actions and GitLab CI/CD
-            runners. It transforms local configuration into randomized, environment-bound
-            Android and iOS artifacts while keeping source, configuration, binaries, and
-            build logs out of Envuscator infrastructure.
+            Envuscator is being built as a runner-local security layer for Android and iOS
+            pipelines. The target v1 architecture keeps source, protected configuration,
+            generated artifacts, and build logs inside customer-controlled CI while adding
+            randomized native output and independently verifiable build evidence.
           </p>
           <div class="actions">
-            <a class="button" href="https://envuscator.micrantha.com">Open current demo</a>
-            <a class="button button-outline" href="mailto:contact@envuscator.com?subject=Envuscator%20integration">Discuss an integration</a>
+            <a class="button" href="mailto:contact@envuscator.com?subject=Envuscator%20integration">Discuss an integration</a>
             <a class="button button-outline" href="https://github.com/hackelia-micrantha/envuscator-community">View public project</a>
+            <a class="button button-outline" href="https://envuscator.micrantha.com">Open concept demo</a>
           </div>
-          <div class="signal-grid" aria-label="Project principles">
+          <p class="demo-note">
+            The current web demo is a product concept surface; it does not yet demonstrate the complete runner-local v1 architecture described below.
+          </p>
+          <div class="signal-grid">
             <article>
-              <span>Execution</span>
-              <strong>Your runner</strong>
-              <p>Configuration and generated artifacts remain within your CI boundary.</p>
+              <span>Current foundation</span>
+              <strong>Native generation</strong>
+              <p>Existing Android and iOS generation paths provide the implementation base.</p>
             </article>
             <article>
-              <span>Delivery</span>
-              <strong>Immutable engine</strong>
-              <p>Short-lived entitlement grants unlock signed, versioned engine releases.</p>
+              <span>In progress</span>
+              <strong>Provider-neutral engine</strong>
+              <p>Stable requests, categorized results, cleanup guarantees, and manifests are converging.</p>
             </article>
             <article>
-              <span>Evidence</span>
-              <strong>Verifiable output</strong>
-              <p>Each artifact receives a deterministic, configuration-free build manifest.</p>
+              <span>Target v1</span>
+              <strong>Runner-local execution</strong>
+              <p>GitHub and GitLab adapters will keep sensitive build material in customer CI.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section" id="outcomes">
+      <section class="section" id="available">
         <div class="section-intro">
-          <p class="eyebrow">Target outcomes</p>
-          <h2>A narrow control added at the right point in the release path.</h2>
+          <p class="eyebrow">Available now</p>
+          <h2>A working implementation base with a narrower production contract under construction.</h2>
           <p>
-            Envuscator is intentionally not a secret manager, hosted build farm, or claim
-            that obfuscation makes a mobile application secure. It is an additional layer
-            intended to increase extraction cost, reduce static uniformity, and make builds
-            independently traceable.
+            Envuscator already has native mobile generation and build-time configuration concepts.
+            Current work is hardening those foundations into a reproducible, provider-neutral v1
+            rather than presenting roadmap guarantees as completed product behavior.
           </p>
         </div>
         <div class="card-grid three">
           <article class="card card-green">
-            <p class="card-kicker">Per-build variation</p>
-            <h3>Reduce static sameness</h3>
-            <p>Generate different native representations across builds rather than shipping one indefinitely reusable encoding.</p>
+            <p class="card-kicker">Existing foundation</p>
+            <h3>Android and iOS generation</h3>
+            <p>Platform-specific tooling produces native mobile artifacts from build configuration.</p>
           </article>
           <article class="card card-blue">
-            <p class="card-kicker">Local trust boundary</p>
-            <h3>Keep sensitive inputs local</h3>
-            <p>Read protected configuration only from the runner filesystem or explicitly controlled process environment.</p>
+            <p class="card-kicker">Existing foundation</p>
+            <h3>Build-time integration</h3>
+            <p>The project is designed around inserting generated configuration during the build rather than maintaining it manually in application code.</p>
           </article>
-          <article class="card card-yellow">
-            <p class="card-kicker">Provider-neutral contract</p>
-            <h3>Support GitHub and GitLab</h3>
-            <p>Expose the same engine request, result taxonomy, cleanup rules, and artifact contract through both CI providers.</p>
-          </article>
-          <article class="card card-red">
-            <p class="card-kicker">Fail closed</p>
-            <h3>Reject unsafe ambiguity</h3>
-            <p>Validate configuration, target syntax, versions, checksums, and artifacts before publishing a successful result.</p>
-          </article>
-          <article class="card card-neutral">
-            <p class="card-kicker">Build provenance</p>
-            <h3>Emit stable manifests</h3>
-            <p>Record engine version, source revision, platform, artifact digest, schemas, and normalized status without configuration values.</p>
-          </article>
-          <article class="card card-violet">
-            <p class="card-kicker">Incremental modernization</p>
-            <h3>Move orchestration to Rust</h3>
-            <p>Replace the mixed shell and Python execution boundary behind a conformance harness while retaining native platform toolchains.</p>
+          <article class="card card-sand">
+            <p class="card-kicker">Explicit limitation</p>
+            <h3>Defense in depth only</h3>
+            <p>Obfuscation raises extraction cost but does not turn shipped client values into durable secrets.</p>
           </article>
         </div>
       </section>
 
-      <section class="section" id="architecture">
+      <section class="section" id="architecture" aria-labelledby="architecture-heading">
         <div class="section-intro">
-          <p class="eyebrow">Architecture</p>
-          <h2>The service licenses the engine. The runner performs the build.</h2>
+          <p class="eyebrow">Target v1 architecture</p>
+          <h2 id="architecture-heading">The service licenses the engine. The runner performs the build.</h2>
           <p>
-            The architecture separates commercial entitlement from sensitive build
-            execution. Provider adapters authenticate the workload, acquire a bounded
-            download grant, verify an immutable release, and invoke the same local engine
-            contract.
+            The intended architecture separates commercial entitlement from sensitive execution.
+            Provider adapters will authenticate a workload, acquire a bounded engine grant, verify
+            an immutable release, and invoke one provider-neutral local engine contract.
           </p>
         </div>
 
-        <div class="architecture-flow" aria-label="Envuscator architecture flow">
-          <article>
+        <ol class="architecture-flow">
+          <li>
             <span>01</span>
             <h3>Provider identity</h3>
-            <p>GitHub OIDC or GitLab job identity proves the repository, namespace, workflow, ref, and environment.</p>
-          </article>
-          <div class="arrow" aria-hidden="true">→</div>
-          <article>
+            <p>GitHub OIDC or GitLab job identity proves repository, namespace, workflow, ref, and environment claims.</p>
+          </li>
+          <li>
             <span>02</span>
             <h3>Entitlement exchange</h3>
-            <p>A minimal web service validates licensing and returns a short-lived grant for an immutable engine release.</p>
-          </article>
-          <div class="arrow" aria-hidden="true">→</div>
-          <article>
+            <p>A minimal service validates licensing and returns a short-lived grant for an immutable engine release.</p>
+          </li>
+          <li>
             <span>03</span>
             <h3>Local engine</h3>
-            <p>The runner verifies the release, reads protected local configuration, and invokes the Android or iOS build path.</p>
-          </article>
-          <div class="arrow" aria-hidden="true">→</div>
-          <article>
+            <p>The runner verifies the release, reads protected local configuration, and invokes the Android or iOS path.</p>
+          </li>
+          <li>
             <span>04</span>
-            <h3>Artifact and manifest</h3>
+            <h3>Artifact and evidence</h3>
             <p>The runner receives an AAR or XCFramework plus deterministic provenance metadata and a normalized result.</p>
-          </article>
-        </div>
+          </li>
+        </ol>
 
         <div class="boundary-grid">
           <article class="boundary trusted">
             <p class="card-kicker">Customer-controlled boundary</p>
-            <h3>What stays in the runner</h3>
+            <h3>What must stay in the runner</h3>
             <ul>
               <li>Application source and protected configuration</li>
               <li>Plaintext temporary material and platform toolchains</li>
-              <li>Generated AARs, XCFrameworks, application binaries, and logs</li>
+              <li>Generated artifacts, application binaries, and build logs</li>
               <li>Cleanup, retention, signing, and release policy</li>
             </ul>
           </article>
           <article class="boundary service">
             <p class="card-kicker">Envuscator service boundary</p>
-            <h3>What the service may know</h3>
+            <h3>What the target service may know</h3>
             <ul>
-              <li>Verified provider workload identity and licensed namespace</li>
+              <li>Verified workload identity and licensed namespace</li>
               <li>Entitlement state and privacy-minimized audit events</li>
               <li>Requested engine version and short-lived grant metadata</li>
               <li>No customer configuration, source, artifacts, or build logs</li>
@@ -177,29 +167,39 @@
 
       <section class="section" id="roadmap">
         <div class="section-intro">
-          <p class="eyebrow">Current delivery plan</p>
-          <h2>Converging on a small, reproducible v1 contract.</h2>
+          <p class="eyebrow">Delivery roadmap</p>
+          <h2>Converging on a small, reproducible contract before commercial expansion.</h2>
         </div>
         <div class="roadmap-grid">
           <article>
             <span class="status active">In progress</span>
             <h3>Engine contract</h3>
-            <p>Stable request and result schemas, categorized failures, deterministic manifests, cleanup guarantees, and real Android/iOS smoke builds.</p>
+            <p>Versioned requests, categorized failures, deterministic manifests, cleanup guarantees, and real Android/iOS smoke builds.</p>
           </article>
           <article>
             <span class="status active">In progress</span>
             <h3>Provider adapters</h3>
-            <p>GitHub Action and GitLab CI component parity using local configuration paths and the same conformance suite.</p>
+            <p>GitHub Action and GitLab CI component parity using local configuration paths and one conformance suite.</p>
           </article>
           <article>
             <span class="status planned">Planned</span>
             <h3>Signed distribution</h3>
-            <p>Reproducible engine releases, checksums, signatures, SBOMs, provenance, compatibility policy, and rollback-tested publication.</p>
+            <p>Reproducible releases, checksums, signatures, SBOMs, provenance, compatibility policy, and rollback-tested publication.</p>
           </article>
           <article>
             <span class="status planned">Planned</span>
             <h3>Commercial entitlement</h3>
-            <p>Provider-neutral licensing for GitHub Marketplace, GitLab-compatible workloads, and explicit offline enterprise operation.</p>
+            <p>Provider-neutral licensing for GitHub, GitLab-compatible workloads, and an explicit offline enterprise boundary.</p>
+          </article>
+          <article>
+            <span class="status planned">Planned</span>
+            <h3>Rust orchestration</h3>
+            <p>An incremental migration from mixed shell and Python orchestration behind conformance fixtures and real-build parity tests.</p>
+          </article>
+          <article>
+            <span class="status planned">Planned</span>
+            <h3>Public verification</h3>
+            <p>Examples, release verification instructions, threat-model documentation, and a single authoritative public deployment.</p>
           </article>
         </div>
       </section>
@@ -212,10 +212,10 @@
         <div>
           <p>
             Values embedded in a shipped client can eventually be recovered by a capable
-            adversary. Envuscator does not replace server-side authorization, secret
-            rotation, hardware-backed key storage, platform attestation, runtime integrity,
-            or a secure SDLC. Use it as defense in depth for values that must exist in the
-            client, and keep true secrets off the client entirely.
+            adversary. Envuscator does not replace server-side authorization, secret rotation,
+            hardware-backed key storage, platform attestation, runtime integrity, or a secure
+            SDLC. Use it as defense in depth for values that must exist in the client, and keep
+            true secrets off the client entirely.
           </p>
         </div>
       </section>
