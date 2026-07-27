@@ -1,16 +1,16 @@
-# Envuscator
+# Envuscator Community
 
-**A mobile build-time obfuscation layer for Android and iOS delivery pipelines.**
+**Public product, documentation, and release surface for Envuscator.**
 
-Envuscator is an incubating Micrantha Solution that protects selected mobile configuration values by transforming them during CI/CD into generated native artifacts with per-use runtime decoding.
+Envuscator is an incubating Micrantha Solution that adds a mobile build-time obfuscation layer to Android and iOS delivery pipelines. Native generation exists today; the provider-neutral engine contract, GitHub and GitLab adapters, signed distribution, entitlement service, deterministic evidence, and Rust orchestration migration are being delivered incrementally.
 
 It is an additional defense layer, not a substitute for secure backend design, platform attestation, secret rotation, or the assumption that application binaries and shipped configuration can eventually be inspected.
 
 ## Product role
 
-Envuscator is designed to make mobile configuration extraction less predictable and more expensive while fitting into existing customer-controlled build pipelines.
+Envuscator is designed to make selected mobile configuration extraction less predictable and more expensive while fitting into customer-controlled build pipelines.
 
-The product boundary consists of:
+The target product boundary includes:
 
 - a provider-neutral native engine;
 - Android and iOS artifact generation;
@@ -20,71 +20,91 @@ The product boundary consists of:
 - licensing and entitlement verification;
 - normalized manifests, checksums, SBOM metadata, and provenance where available.
 
+Implementation remains in progress; this repository does not claim that every commercial surface or target security property is generally available today.
+
+## Public website
+
+The authoritative static site lives in [`web/`](./web):
+
+- `web/index.html`
+- `web/styles.css`
+
+It separates current foundations, work in progress, and target-v1 architecture so planned security properties are not presented as deployed guarantees.
+
+## Deployment contract
+
+- Source directory: `web/`
+- Build step: none
+- Output directory: `web/`
+- Cloudflare configuration: [`wrangler.toml`](./wrangler.toml)
+- Production hostname: to be finalized as part of the duplicate-site retirement tracked in issue #2
+- `https://envuscator.micrantha.com`: currently a separate concept/demo application and not evidence that the complete runner-local v1 architecture is deployed
+
+The Cloudflare Workers integration serves `web/` as static assets. This repository is the intended authoritative public documentation and product surface.
+
 ## Delivery and commercial model
 
 The v1 commercial surface is being designed around **licensed CI adapters** rather than hosted customer builds:
 
-| Surface | Delivery model |
+| Surface | Target delivery model |
 | --- | --- |
 | GitHub | Versioned GitHub Action using workload identity for entitlement exchange |
 | GitLab | Versioned GitLab CI/CD Component using GitLab job identity |
 | Local | CLI using the same provider-neutral execution contract |
 | Web | Licensing, entitlement, account, and product information only |
 
-Customer source code, mobile configuration, and generated build content remain on customer-controlled runners. The adapters resolve and verify an immutable signed engine and must not require a consumer personal access token to check out mutable private engine source.
+Customer source code, protected mobile configuration, generated artifacts, and build logs remain on customer-controlled runners in the target v1 trust boundary. Adapters resolve and verify immutable engine releases and must not require consumer personal access tokens to check out mutable private engine source.
 
-The GitHub and GitLab integrations are intended to provide consistent product semantics while supporting subscriptions, organization entitlements, trials, and future offline licenses. Implementation remains in progress; this repository does not claim that every commercial surface is generally available today.
+## Architecture principles
 
-## Security boundary
+### Current foundations
 
-Envuscator accepts a local configuration file materialized by the CI platform's protected secret mechanism. Plaintext or base64 configuration values are not intended to be ordinary workflow, component, JSON, or command-line inputs.
+- Native Android and iOS generation paths exist.
+- Build-time configuration and obfuscation concepts are implemented in the existing engine.
+- Obfuscation is treated as defense in depth, not secret storage or runtime authorization.
 
-A canonical execution handles exactly one platform and one build type:
+### Target v1 contract
 
-```text
-GitHub Action / GitLab Component / local CLI
-                    |
-                    v
-          entitlement verification
-                    |
-                    v
-        immutable engine verification
-                    |
-                    v
-       configuration source generation
-                    |
-                    v
-        Android AAR or iOS XCFramework
-                    |
-                    v
- manifest + checksums + provenance metadata
-```
+- Customer configuration, source, artifacts, and build logs remain in the customer runner.
+- GitHub and GitLab adapters consume the same provider-neutral engine contract.
+- Engine releases are immutable, checksummed, signed, and independently verifiable.
+- Generated artifacts include deterministic manifests without configuration values.
+- Plaintext temporary material is permission-restricted, leak-scanned, and cleanup-verified.
+- The orchestration boundary migrates incrementally to Rust behind conformance tests.
+- Hosted customer build orchestration remains outside the v1 trust boundary.
 
-Expected controls include:
+## Project boundaries
 
-- immutable version and digest verification;
-- workload-identity-based entitlement exchange;
-- restrictive temporary-file permissions;
-- explicit Android or iOS execution boundaries;
-- secret and canary-value leak scanning;
-- cleanup verification;
-- provider-neutral error categories and manifests;
-- no hosted build orchestration in the v1 trust boundary.
+| Repository | Current role | Target role |
+| --- | --- | --- |
+| `mobuild-envuscator` | Private implementation and native generation | Engine, provider adapters, and release producer |
+| `envuscator-community` | Public static content | Authoritative website, documentation, examples, verification material, and release surface |
+| `envuscator-web` | Existing demo/application code | Minimal licensing and entitlement service with no hosted customer builds or configuration storage |
 
 ## Relationship to other Micrantha projects
-
-Envuscator complements other mobile security layers rather than replacing them:
 
 - **Digitalis** addresses device attestation and secure runtime configuration delivery.
 - **Veil** explores privacy-preserving image concealment.
 - **Bluebell** provides reusable Kotlin Multiplatform build and SDK patterns.
 - **Mobuild** provides the wider modular mobile-build architecture in which Envuscator originated.
 
-## Current platform scope
+## Validation
 
-- Android
-- iOS
-- ARM, ARM64, x86, and x86_64 where supported by the selected platform toolchain
+The repository includes a dependency-free validation script and GitHub Actions workflow.
+
+```sh
+python3 scripts/verify_site.py
+```
+
+Validation checks include HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, Micrantha brand tokens, and current-versus-target state labels.
+
+## Local preview
+
+```sh
+python3 -m http.server 8080 --directory web
+```
+
+Then open `http://localhost:8080`.
 
 ## Status
 
@@ -93,4 +113,4 @@ Envuscator is **Incubating**. Its provider-neutral adapter contract, customer-ru
 ## Contact
 
 - Waitlist: `waitlist@envuscator.com`
-- Contact or demo: `contact@envuscator.com`
+- Integration and demo requests: `contact@envuscator.com`
