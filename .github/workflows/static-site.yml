@@ -1,0 +1,61 @@
+name: Static site
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: static-site-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate public site
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate HTML, links, state labels, and brand tokens
+        run: python3 scripts/verify_site.py
+
+      - name: Start static server
+        run: |
+          python3 -m http.server 8080 --directory web > /tmp/envuscator-site.log 2>&1 &
+          echo $! > /tmp/envuscator-site.pid
+
+      - name: Smoke test served page
+        run: |
+          python3 - <<'PY'
+          import time
+          import urllib.request
+
+          url = "http://127.0.0.1:8080/"
+          last_error = None
+          for _ in range(20):
+              try:
+                  with urllib.request.urlopen(url, timeout=2) as response:
+                      body = response.read().decode("utf-8")
+                      assert response.status == 200
+                      assert "Target v1 architecture" in body
+                      assert "Envuscator" in body
+                      break
+              except Exception as error:
+                  last_error = error
+                  time.sleep(0.25)
+          else:
+              raise SystemExit(f"static site did not become ready: {last_error}")
+          PY
+
+      - name: Stop static server
+        if: always()
+        run: |
+          if test -f /tmp/envuscator-site.pid; then
+            kill "$(cat /tmp/envuscator-site.pid)" || true
+          fi
