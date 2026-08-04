@@ -1,0 +1,117 @@
+/* Micrantha visual alignment layer. */
+body {
+  background:
+    radial-gradient(circle at 8% 0%, rgb(219 234 247 / 0.58), transparent 31rem),
+    radial-gradient(circle at 92% 2%, rgb(211 228 222 / 0.55), transparent 34rem),
+    var(--brand-paper);
+}
+
+.page { width: min(calc(100% - 2rem), 72rem); }
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 0 -1rem 1.25rem;
+  padding: 0.9rem 1rem;
+  background: rgb(252 251 247 / 0.86);
+  border-bottom: 1px solid rgb(37 51 52 / 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.brand-mark {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 999px 999px 999px 0.8rem;
+  background: linear-gradient(145deg, #f8fffb, var(--brand-mist));
+  box-shadow: 0 8px 20px rgb(37 51 52 / 0.08);
+}
+
+nav { align-items: center; gap: 0.35rem; }
+nav a {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  transition: background 160ms ease, color 160ms ease;
+}
+nav a:hover { background: rgb(211 228 222 / 0.65); }
+.micrantha-link {
+  border: 1px solid rgb(37 51 52 / 0.14);
+  background: rgb(255 255 255 / 0.72);
+  font-weight: 650;
+}
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 38rem;
+  border-color: rgb(255 255 255 / 0.92);
+  background: linear-gradient(135deg, rgb(255 253 248 / 0.96), rgb(237 247 241 / 0.94) 54%, rgb(235 243 250 / 0.94));
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 999px 999px 999px 1.5rem;
+}
+.hero::before {
+  top: -5rem;
+  right: -4rem;
+  width: 18rem;
+  height: 28rem;
+  background: rgb(211 228 222 / 0.48);
+  transform: rotate(-18deg);
+}
+.hero::after {
+  right: 11rem;
+  bottom: -9rem;
+  width: 12rem;
+  height: 22rem;
+  background: rgb(219 234 247 / 0.46);
+  transform: rotate(34deg);
+}
+.hero-glyph {
+  width: 7rem;
+  border-radius: 999px 999px 999px 1.4rem;
+  background: linear-gradient(145deg, rgb(255 255 255 / 0.98), var(--brand-mist));
+  font-size: 4rem;
+  transform: rotate(-7deg);
+}
+.hero-copy { max-width: 60rem; }
+.hero h1 { max-width: 58rem; }
+
+.signal-grid article,
+.card,
+.roadmap-grid article,
+.boundary,
+.architecture-flow li {
+  border-color: rgb(203 213 225 / 0.78);
+  box-shadow: 0 18px 36px rgb(31 42 42 / 0.07);
+}
+
+.section-intro {
+  padding-left: 1.1rem;
+  border-left: 3px solid var(--brand-mist);
+}
+
+.footer-brand { display: flex; gap: 0.75rem; align-items: center; }
+
+@media (min-width: 800px) {
+  .hero { grid-template-columns: 8rem minmax(0, 1fr); align-items: start; }
+  .hero-mark { padding-top: 0.35rem; }
+}
+
+@media (max-width: 700px) {
+  .site-header {
+    position: static;
+    margin-inline: 0;
+    padding-inline: 0;
+    background: transparent;
+    border-bottom: 0;
+    backdrop-filter: none;
+  }
+  nav a { padding-inline: 0.2rem; }
+  .micrantha-link { padding-inline: 0.65rem; }
+  .hero { min-height: auto; }
+}

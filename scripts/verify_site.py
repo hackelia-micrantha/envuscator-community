@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
 INDEX = WEB / "index.html"
-CSS = WEB / "styles.css"
+PRIMARY_CSS = WEB / "styles.css"
 
 
 class SiteParser(HTMLParser):
@@ -68,7 +68,7 @@ def resolve_local_path(href: str) -> Path | None:
 
 def main() -> None:
     assert INDEX.is_file(), "web/index.html is missing"
-    assert CSS.is_file(), "web/styles.css is missing"
+    assert PRIMARY_CSS.is_file(), "web/styles.css is missing"
 
     parser = SiteParser()
     parser.feed(INDEX.read_text(encoding="utf-8"))
@@ -93,12 +93,19 @@ def main() -> None:
             assert local.exists(), f"unresolved local link: {href}"
 
     assert parser.stylesheets, "no stylesheet linked"
+    stylesheet_paths: list[Path] = []
     for href in parser.stylesheets:
         local = resolve_local_path(href)
         assert local is not None and local.is_file(), f"missing stylesheet: {href}"
+        stylesheet_paths.append(local)
 
-    css = CSS.read_text(encoding="utf-8")
-    assert css.count("{") == css.count("}"), "CSS braces are unbalanced"
+    for stylesheet in stylesheet_paths:
+        css = stylesheet.read_text(encoding="utf-8")
+        assert css.count("{") == css.count("}"), (
+            f"CSS braces are unbalanced: {stylesheet.relative_to(ROOT)}"
+        )
+
+    primary_css = PRIMARY_CSS.read_text(encoding="utf-8")
     for token in (
         "--brand-ink: #1f2a2a",
         "--brand-leaf: #2f6b55",
@@ -107,7 +114,7 @@ def main() -> None:
         "--brand-sand: #f4efe3",
         "--brand-paper: #fcfbf7",
     ):
-        assert token in css, f"Micrantha brand token missing: {token}"
+        assert token in primary_css, f"Micrantha brand token missing: {token}"
 
     html = INDEX.read_text(encoding="utf-8")
     for required_copy in ("Available now", "Target v1 architecture", "In progress", "Planned"):
