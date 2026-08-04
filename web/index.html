@@ -4,10 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fcfbf7" />
-    <title>Envuscator — randomized mobile build obfuscation</title>
-    <meta name="description" content="Envuscator is building a runner-local mobile security layer that adds per-build variation and environment-bound configuration to Android and iOS artifacts." />
-    <meta property="og:title" content="Envuscator — randomized mobile build obfuscation" />
-    <meta property="og:description" content="A runner-local mobile build security layer designed for GitHub Actions and GitLab CI/CD." />
+    <title>Envuscator — an extra build-specific security layer</title>
+    <meta name="description" content="Envuscator adds an extra build-specific security layer to mobile applications through randomized, layered obfuscation that produces a unique protected build for each CI execution." />
+    <meta property="og:title" content="Envuscator — an extra build-specific security layer" />
+    <meta property="og:description" content="Randomized, layered mobile obfuscation designed to increase the cost of reverse engineering while running inside customer-controlled CI." />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./micrantha.css" />
@@ -24,6 +24,7 @@
           <a href="#available">Foundations</a>
           <a href="#architecture">Architecture</a>
           <a href="#roadmap">Roadmap</a>
+          <a href="#licensing">Licensing</a>
           <a href="https://github.com/hackelia-micrantha/envuscator-community">GitHub</a>
           <a class="micrantha-link" href="https://micrantha.com">Micrantha</a>
         </nav>
@@ -33,8 +34,8 @@
         <div class="hero-mark" aria-hidden="true"><div class="hero-glyph">E</div></div>
         <div class="hero-copy">
           <p class="eyebrow">Micrantha laboratory · mobile security</p>
-          <h1>Build-specific obfuscation without creating another secrets boundary.</h1>
-          <p class="lede">Envuscator is being built as a runner-local security layer for Android and iOS pipelines. The target v1 architecture keeps source, protected configuration, generated artifacts, and build logs inside customer-controlled CI while adding randomized native output and independently verifiable build evidence.</p>
+          <h1>An extra build-specific security layer for mobile applications.</h1>
+          <p class="lede">Envuscator applies randomized, layered obfuscation during your build pipeline to produce a unique protected build for every CI execution. The goal is not impossible client-side secrecy, but a practical increase in the cost of reverse engineering while keeping sensitive build operations inside your own infrastructure.</p>
           <div class="actions">
             <a class="button" href="mailto:contact@envuscator.com?subject=Envuscator%20integration">Discuss an integration</a>
             <a class="button button-outline" href="https://github.com/hackelia-micrantha/envuscator-community">View public project</a>
@@ -42,9 +43,9 @@
           </div>
           <p class="demo-note">The current web demo is a product concept surface; it does not yet demonstrate the complete runner-local v1 architecture described below.</p>
           <div class="signal-grid">
-            <article><span>Current foundation</span><strong>Native generation</strong><p>Existing Android and iOS generation paths provide the implementation base.</p></article>
-            <article><span>In progress</span><strong>Provider-neutral engine</strong><p>Stable requests, categorized results, cleanup guarantees, and manifests are converging.</p></article>
-            <article><span>Target v1</span><strong>Runner-local execution</strong><p>GitHub and GitLab adapters will keep sensitive build material in customer CI.</p></article>
+            <article><span>Build-specific output</span><strong>A unique protected build</strong><p>Each CI execution can vary generated native output so one successful analysis is less reusable against the next build.</p></article>
+            <article><span>Layered techniques</span><strong>Randomized obfuscation</strong><p>Multiple complementary transformations increase effort beyond a single predictable obfuscation pass.</p></article>
+            <article><span>Customer controlled</span><strong>Execution stays in your CI</strong><p>Source, protected configuration, artifacts, and build logs remain inside customer-managed infrastructure.</p></article>
           </div>
         </div>
       </section>
@@ -52,27 +53,27 @@
       <section class="section" id="available">
         <div class="section-intro">
           <p class="eyebrow">Available now</p>
-          <h2>A working implementation base with a narrower production contract under construction.</h2>
-          <p>Envuscator already has native mobile generation and build-time configuration concepts. Current work is hardening those foundations into a reproducible, provider-neutral v1 rather than presenting roadmap guarantees as completed product behavior.</p>
+          <h2>A working implementation base for build-specific mobile protection.</h2>
+          <p>Envuscator already has native Android and iOS generation and build-time configuration foundations. Current work is hardening those foundations into a reproducible, provider-neutral engine that can combine randomized techniques without overstating what client-side protection can guarantee.</p>
         </div>
         <div class="card-grid three">
-          <article class="card card-green"><p class="card-kicker">Existing foundation</p><h3>Android and iOS generation</h3><p>Platform-specific tooling produces native mobile artifacts from build configuration.</p></article>
-          <article class="card card-blue"><p class="card-kicker">Existing foundation</p><h3>Build-time integration</h3><p>Generated configuration is inserted during the build instead of being maintained manually in application code.</p></article>
-          <article class="card card-sand"><p class="card-kicker">Explicit limitation</p><h3>Defense in depth only</h3><p>Obfuscation raises extraction cost but does not turn shipped client values into durable secrets.</p></article>
+          <article class="card card-green"><p class="card-kicker">Build-specific output</p><h3>Unique native artifacts</h3><p>Platform-specific generation makes it possible to vary protected Android and iOS output between CI executions.</p></article>
+          <article class="card card-blue"><p class="card-kicker">Layered protection</p><h3>Multiple randomized methods</h3><p>The target engine combines complementary obfuscation techniques instead of relying on one predictable transformation.</p></article>
+          <article class="card card-sand"><p class="card-kicker">Explicit limitation</p><h3>Defense in depth only</h3><p>No build-time client protection is perfect. Envuscator raises extraction cost but does not turn shipped values into durable secrets.</p></article>
         </div>
       </section>
 
       <section class="section" id="architecture" aria-labelledby="architecture-heading">
         <div class="section-intro">
-          <p class="eyebrow">Target v1 architecture</p>
+          <p class="eyebrow">How protection is delivered</p>
           <h2 id="architecture-heading">The service licenses the engine. The runner performs the build.</h2>
-          <p>The intended architecture separates commercial entitlement from sensitive execution. Provider adapters authenticate a workload, acquire a bounded engine grant, verify an immutable release, and invoke one provider-neutral local engine contract.</p>
+          <p>The intended architecture supports the product promise without creating another sensitive build boundary. Provider adapters authenticate a workload, acquire a bounded engine grant, verify an immutable release, and invoke one provider-neutral local engine contract.</p>
         </div>
         <ol class="architecture-flow">
           <li><span>01</span><h3>Provider identity</h3><p>GitHub OIDC or GitLab job identity proves repository, namespace, workflow, ref, and environment claims.</p></li>
           <li><span>02</span><h3>Entitlement exchange</h3><p>A minimal service validates licensing and returns a short-lived grant for an immutable engine release.</p></li>
-          <li><span>03</span><h3>Local engine</h3><p>The runner verifies the release, reads protected local configuration, and invokes the Android or iOS path.</p></li>
-          <li><span>04</span><h3>Artifact and evidence</h3><p>The runner receives an AAR or XCFramework plus deterministic provenance metadata and a normalized result.</p></li>
+          <li><span>03</span><h3>Local engine</h3><p>The runner verifies the release, reads protected local configuration, and applies the Android or iOS protection path.</p></li>
+          <li><span>04</span><h3>Artifact and evidence</h3><p>The runner receives a build-specific AAR or XCFramework plus deterministic provenance metadata and a normalized result.</p></li>
         </ol>
         <div class="boundary-grid">
           <article class="boundary trusted"><p class="card-kicker">Customer-controlled boundary</p><h3>What must stay in the runner</h3><ul><li>Application source and protected configuration</li><li>Plaintext temporary material and platform toolchains</li><li>Generated artifacts, application binaries, and build logs</li><li>Cleanup, retention, signing, and release policy</li></ul></article>
@@ -85,20 +86,28 @@
         <div class="roadmap-grid">
           <article><span class="status active">In progress</span><h3>Engine contract</h3><p>Versioned requests, categorized failures, deterministic manifests, cleanup guarantees, and real Android/iOS smoke builds.</p></article>
           <article><span class="status active">In progress</span><h3>Provider adapters</h3><p>GitHub Action and GitLab CI component parity using local configuration paths and one conformance suite.</p></article>
+          <article><span class="status planned">Planned</span><h3>Layered randomization</h3><p>Composable build-specific techniques with explicit compatibility, reproducibility, and failure semantics.</p></article>
           <article><span class="status planned">Planned</span><h3>Signed distribution</h3><p>Reproducible releases, checksums, signatures, SBOMs, provenance, compatibility policy, and rollback-tested publication.</p></article>
-          <article><span class="status planned">Planned</span><h3>Commercial entitlement</h3><p>Provider-neutral licensing for GitHub, GitLab-compatible workloads, and an explicit offline enterprise boundary.</p></article>
-          <article><span class="status planned">Planned</span><h3>Rust orchestration</h3><p>An incremental migration behind conformance fixtures and real-build parity tests.</p></article>
+          <article><span class="status planned">Planned</span><h3>Commercial model</h3><p>Perpetual one-time licensing alongside subscription updates, hosted services, support, and an offline enterprise boundary.</p></article>
           <article><span class="status planned">Planned</span><h3>Public verification</h3><p>Examples, release verification instructions, threat-model documentation, and a single authoritative public deployment.</p></article>
         </div>
       </section>
 
       <section class="section honesty">
-        <div><p class="eyebrow">Security scope</p><h2>Obfuscation is friction, not confidentiality.</h2></div>
-        <div><p>Values embedded in a shipped client can eventually be recovered by a capable adversary. Envuscator does not replace server-side authorization, secret rotation, hardware-backed key storage, platform attestation, runtime integrity, or a secure SDLC. Use it as defense in depth for values that must exist in the client, and keep true secrets off the client entirely.</p></div>
+        <div><p class="eyebrow">Defense in depth</p><h2>No client-side protection is perfect.</h2></div>
+        <div><p>Given sufficient time and resources, a determined attacker can recover values and behavior from a shipped application. Envuscator does not promise permanent client-side secrecy. It increases reverse-engineering cost by producing a unique protected build for each CI execution and combining multiple randomized obfuscation techniques. It complements, rather than replaces, secure backend authorization, secret rotation, hardware-backed key storage, platform attestation, runtime integrity, and a secure SDLC.</p></div>
+      </section>
+
+      <section class="section" id="licensing">
+        <div class="section-intro">
+          <p class="eyebrow">Licensing philosophy</p>
+          <h2>Simple, sustainable licensing without unnecessary lock-in.</h2>
+          <p>The long-term pricing model is intended to always include a perpetual one-time purchase option alongside subscription tiers. Subscription plans may provide ongoing updates, hosted services, and enterprise support, while teams that prefer to own their tooling should retain a perpetual licensing path. These commercial options are planned and are not yet presented as generally available product tiers.</p>
+        </div>
       </section>
 
       <footer>
-        <div class="footer-brand"><span class="brand-mark" aria-hidden="true">E</span><div><strong>Envuscator</strong><p>Randomized mobile build obfuscation by Micrantha.</p></div></div>
+        <div class="footer-brand"><span class="brand-mark" aria-hidden="true">E</span><div><strong>Envuscator</strong><p>An extra build-specific security layer by Micrantha.</p></div></div>
         <div class="footer-links"><a href="https://github.com/hackelia-micrantha/envuscator-community">Public repository</a><a href="mailto:waitlist@envuscator.com">Waitlist</a><a href="mailto:contact@envuscator.com">Contact</a><a href="https://micrantha.com">Micrantha</a></div>
       </footer>
     </main>
