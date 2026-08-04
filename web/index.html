@@ -46,6 +46,7 @@
             <article><span>Build-specific output</span><strong>A unique protected build</strong><p>Each CI execution can vary generated native output so one successful analysis is less reusable against the next build.</p></article>
             <article><span>Layered techniques</span><strong>Randomized obfuscation</strong><p>Multiple complementary transformations increase effort beyond a single predictable obfuscation pass.</p></article>
             <article><span>Customer controlled</span><strong>Execution stays in your CI</strong><p>Source, protected configuration, artifacts, and build logs remain inside customer-managed infrastructure.</p></article>
+            <article><span>Provider neutral</span><strong>One engine contract</strong><p>GitHub Actions, GitLab CI/CD, and local execution converge on the same provider-neutral protection model.</p></article>
           </div>
         </div>
       </section>
@@ -65,7 +66,7 @@
 
       <section class="section" id="architecture" aria-labelledby="architecture-heading">
         <div class="section-intro">
-          <p class="eyebrow">How protection is delivered</p>
+          <p class="eyebrow">Target v1 architecture · how protection is delivered</p>
           <h2 id="architecture-heading">The service licenses the engine. The runner performs the build.</h2>
           <p>The intended architecture supports the product promise without creating another sensitive build boundary. Provider adapters authenticate a workload, acquire a bounded engine grant, verify an immutable release, and invoke one provider-neutral local engine contract.</p>
         </div>
@@ -89,6 +90,7 @@
           <article><span class="status planned">Planned</span><h3>Layered randomization</h3><p>Composable build-specific techniques with explicit compatibility, reproducibility, and failure semantics.</p></article>
           <article><span class="status planned">Planned</span><h3>Signed distribution</h3><p>Reproducible releases, checksums, signatures, SBOMs, provenance, compatibility policy, and rollback-tested publication.</p></article>
           <article><span class="status planned">Planned</span><h3>Commercial model</h3><p>Perpetual one-time licensing alongside subscription updates, hosted services, support, and an offline enterprise boundary.</p></article>
+          <article><span class="status planned">Planned</span><h3>Rust orchestration</h3><p>An incremental migration from mixed shell and Python orchestration behind conformance fixtures and real-build parity tests.</p></article>
           <article><span class="status planned">Planned</span><h3>Public verification</h3><p>Examples, release verification instructions, threat-model documentation, and a single authoritative public deployment.</p></article>
         </div>
       </section>
