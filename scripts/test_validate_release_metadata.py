@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sys
 import tempfile
 import unittest
@@ -105,7 +106,7 @@ class ReleaseMetadataSurfaceTests(unittest.TestCase):
         version = version or self.VERSION
         target = target or self.TARGET
         path = self.release_root / version / target
-        path.mkdir(parents=True)
+        path.mkdir(parents=True, exist_ok=True)
         descriptor_value = descriptor or self._descriptor()
         descriptor_bytes = self._canonical(descriptor_value)
         statement = self._statement(descriptor_bytes, descriptor_value)
@@ -138,7 +139,6 @@ class ReleaseMetadataSurfaceTests(unittest.TestCase):
                 self._write_release(version=version, target=target)
                 with self.assertRaises(validator.ValidationError):
                     validator.validate_tree()
-                import shutil
                 shutil.rmtree(self.release_root)
 
     def test_noncanonical_descriptor_is_rejected(self) -> None:
