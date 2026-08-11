@@ -22,6 +22,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Run signed release metadata contract tests
+        run: python3 scripts/test_validate_release_metadata.py
+
+      - name: Validate public signed release metadata tree
+        run: python3 scripts/validate_release_metadata.py
+
       - name: Validate HTML, links, state labels, and brand tokens
         run: python3 scripts/verify_site.py
 
