@@ -22,14 +22,25 @@ The target product boundary includes:
 
 Implementation remains in progress; this repository does not claim that every commercial surface or target security property is generally available today.
 
-## Public website
+## Public website and release metadata
 
-The authoritative static site lives in [`web/`](./web):
+The authoritative static surface lives in [`web/`](./web):
 
 - `web/index.html`
 - `web/styles.css`
+- [`web/releases/`](./web/releases/) for signed release metadata only
 
-It separates current foundations, work in progress, and target-v1 architecture so planned security properties are not presented as deployed guarantees.
+The site separates current foundations, work in progress, and target-v1 architecture so planned security properties are not presented as deployed guarantees.
+
+The release metadata plane is intentionally separate from private engine archive storage. Exact-version metadata will use:
+
+```text
+/releases/v1/<engine-version>/<target>/release.statement.json
+/releases/v1/<engine-version>/<target>/release.statement.sig
+/releases/v1/<engine-version>/<target>/release.json
+```
+
+Public hosting is distribution, not trust. Consumers independently verify the signed release statement and descriptor before using version, digest, or size, and the entitlement-gated commercial path does not trust descriptor `archive_url` for engine retrieval. See [`web/releases/README.md`](./web/releases/README.md).
 
 ## Deployment contract
 
@@ -37,10 +48,10 @@ It separates current foundations, work in progress, and target-v1 architecture s
 - Build step: none
 - Output directory: `web/`
 - Cloudflare configuration: [`wrangler.toml`](./wrangler.toml)
-- Production hostname: to be finalized as part of the duplicate-site retirement tracked in issue #2
+- Production hostname: to be finalized as part of duplicate-site retirement
 - `https://envuscator.micrantha.com`: currently a separate concept/demo application and not evidence that the complete runner-local v1 architecture is deployed
 
-The Cloudflare Workers integration serves `web/` as static assets. This repository is the intended authoritative public documentation and product surface.
+The Cloudflare Workers integration serves `web/` as static assets. This repository is the intended authoritative public documentation, signed metadata, and product surface.
 
 ## Delivery and commercial model
 
@@ -68,6 +79,7 @@ Customer source code, protected mobile configuration, generated artifacts, and b
 - Customer configuration, source, artifacts, and build logs remain in the customer runner.
 - GitHub and GitLab adapters consume the same provider-neutral engine contract.
 - Engine releases are immutable, checksummed, signed, and independently verifiable.
+- Signed release metadata can be distributed publicly while engine archives remain entitlement-gated.
 - Generated artifacts include deterministic manifests without configuration values.
 - Plaintext temporary material is permission-restricted, leak-scanned, and cleanup-verified.
 - The orchestration boundary migrates incrementally to Rust behind conformance tests.
@@ -77,8 +89,9 @@ Customer source code, protected mobile configuration, generated artifacts, and b
 
 | Repository | Current role | Target role |
 | --- | --- | --- |
-| `mobuild-envuscator` | Private implementation and native generation | Engine, provider adapters, and release producer |
-| `envuscator-community` | Public static content | Authoritative website, documentation, examples, verification material, and release surface |
+| `mobuild-envuscator` | Private implementation and native generation | Provider-neutral engine and immutable release producer |
+| `actions` | Provider adapter and resolver implementation | GitHub/GitLab adapters, workload identity, metadata verification, entitlement exchange, and runner-side acquisition |
+| `envuscator-community` | Public static content | Authoritative website, documentation, examples, verification material, signed metadata, and release surface |
 | `envuscator-web` | Existing demo/application code | Minimal licensing and entitlement service with no hosted customer builds or configuration storage |
 
 ## Relationship to other Micrantha projects
@@ -90,13 +103,17 @@ Customer source code, protected mobile configuration, generated artifacts, and b
 
 ## Validation
 
-The repository includes a dependency-free validation script and GitHub Actions workflow.
+The repository includes dependency-free validation scripts and GitHub Actions coverage.
 
 ```sh
 python3 scripts/verify_site.py
+python3 scripts/test_validate_release_metadata.py
+python3 scripts/validate_release_metadata.py
 ```
 
-Validation checks include HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, Micrantha brand tokens, and current-versus-target state labels.
+Site validation checks HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, Micrantha brand tokens, and current-versus-target state labels.
+
+Release metadata validation rejects unexpected release payloads, archive/key publication, unsafe paths, non-canonical metadata, version/target path mismatches, and statement/descriptor identity disagreement. Cryptographic signature verification remains mandatory in consumers; repository validation does not substitute for it.
 
 ## Local preview
 
@@ -108,7 +125,7 @@ Then open `http://localhost:8080`.
 
 ## Status
 
-Envuscator is **Incubating**. Its provider-neutral adapter contract, customer-runner trust boundary, GitHub/GitLab parity, immutable engine model, and licensing direction are accepted architectural decisions under active implementation.
+Envuscator is **Incubating**. Its provider-neutral adapter contract, customer-runner trust boundary, GitHub/GitLab parity, immutable engine model, signed metadata split, and licensing direction are accepted architectural decisions under active implementation.
 
 ## Contact
 
