@@ -66,7 +66,7 @@
 
       <section class="section" id="architecture" aria-labelledby="architecture-heading">
         <div class="section-intro">
-          <p class="eyebrow">V1 architecture · foundation implemented, activation pending</p>
+          <p class="eyebrow">Target v1 architecture · foundation implemented, activation pending</p>
           <h2 id="architecture-heading">The service licenses the engine. The runner performs the build.</h2>
           <p>The implemented trust model avoids creating a second sensitive build boundary. Provider adapters authenticate a workload, verify an immutable release, acquire a bounded engine entitlement, retrieve the exact private engine archive from the fixed service authority, and invoke one provider-neutral local engine contract.</p>
         </div>
@@ -89,8 +89,8 @@
           <article><span class="status active">Activation gated</span><h3>Provider adapters</h3><p>The shared GitHub OIDC and GitLab ID-token authorized paths are implemented internally. Public Action/Component wiring stays disabled until production service and release-trust gates pass.</p></article>
           <article><span class="status active">Implemented foundation</span><h3>Signed distribution</h3><p>Immutable archive, checksum, signed release statement, verifier, metadata export, trust-candidate tooling, and adapter verification exist. The first real production offline signing identity and public trust are still pending.</p></article>
           <article><span class="status active">In progress</span><h3>Commercial authority</h3><p>Provider-neutral grants, replay-safe event persistence, commercial source bindings, lifecycle mapping, and durable reconciliation exist. Authoritative Stripe network reconciliation, acquisition binding, and production route activation remain.</p></article>
-          <article><span class="status planned">Later</span><h3>Layered expansion</h3><p>Additional composable build-specific techniques, ABI/toolchain compatibility evidence, broader property/fuzz coverage, and runtime-hooking documentation extend the existing protection model.</p></article>
-          <article><span class="status planned">Later</span><h3>Rust orchestration</h3><p>Rust remains an incremental migration behind stable contracts and conformance tests, not a prerequisite for the first supported v1 release.</p></article>
+          <article><span class="status planned">Planned</span><h3>Layered expansion</h3><p>Additional composable build-specific techniques, ABI/toolchain compatibility evidence, broader property/fuzz coverage, and runtime-hooking documentation extend the existing protection model.</p></article>
+          <article><span class="status planned">Planned</span><h3>Rust orchestration</h3><p>Rust remains an incremental migration behind stable contracts and conformance tests, not a prerequisite for the first supported v1 release.</p></article>
           <article><span class="status active">In progress</span><h3>Public verification</h3><p>This repository is the authoritative public documentation and signed-metadata surface. Remaining work includes one final public deployment, security/compatibility guidance, quickstarts, and production release metadata after signing trust is provisioned.</p></article>
         </div>
       </section>
