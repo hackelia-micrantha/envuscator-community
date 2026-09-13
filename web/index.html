@@ -41,7 +41,7 @@
             <a class="button button-outline" href="https://github.com/hackelia-micrantha/envuscator-community">View public project</a>
             <a class="button button-outline" href="https://envuscator.micrantha.com">Open concept demo</a>
           </div>
-          <p class="demo-note">The current web demo is a product concept surface; it does not yet demonstrate the complete runner-local v1 architecture described below.</p>
+          <p class="demo-note">Core engine, entitlement, signed-release, and provider-adapter foundations are implemented and executable-qualified on Linux/Android. Production signing, external service deployment, public wrapper activation, commercial route activation, and native iOS qualification remain explicit release gates. The linked concept demo is a separate historical surface.</p>
           <div class="signal-grid">
             <article><span>Build-specific output</span><strong>A unique protected build</strong><p>Each CI execution can vary generated native output so one successful analysis is less reusable against the next build.</p></article>
             <article><span>Layered techniques</span><strong>Randomized obfuscation</strong><p>Multiple complementary transformations increase effort beyond a single predictable obfuscation pass.</p></article>
@@ -53,58 +53,58 @@
 
       <section class="section" id="available">
         <div class="section-intro">
-          <p class="eyebrow">Available now</p>
-          <h2>A working implementation base for build-specific mobile protection.</h2>
-          <p>Envuscator already has native Android and iOS generation and build-time configuration foundations. Current work is hardening those foundations into a reproducible, provider-neutral engine that can combine randomized techniques without overstating what client-side protection can guarantee.</p>
+          <p class="eyebrow">Implemented foundations</p>
+          <h2>The core runner-local architecture exists; production activation is still gated.</h2>
+          <p>Envuscator has native Android and iOS generation foundations, a provider-neutral immutable engine contract, signed release metadata verification, workload-identity-based entitlement exchange, entitlement-authorized private engine delivery, and shared GitHub/GitLab adapter composition. Current work is release hardening and production qualification, not a hosted customer-build redesign.</p>
         </div>
         <div class="card-grid three">
-          <article class="card card-green"><p class="card-kicker">Build-specific output</p><h3>Unique native artifacts</h3><p>Platform-specific generation makes it possible to vary protected Android and iOS output between CI executions.</p></article>
-          <article class="card card-blue"><p class="card-kicker">Layered protection</p><h3>Multiple randomized methods</h3><p>The target engine combines complementary obfuscation techniques instead of relying on one predictable transformation.</p></article>
-          <article class="card card-sand"><p class="card-kicker">Explicit limitation</p><h3>Defense in depth only</h3><p>No build-time client protection is perfect. Envuscator raises extraction cost but does not turn shipped values into durable secrets.</p></article>
+          <article class="card card-green"><p class="card-kicker">Engine</p><h3>Runner-local native generation</h3><p>Android and iOS generation remain inside the customer-controlled build boundary. Linux/Android engine execution is qualified on repository-scoped rootless JIT; native iOS qualification remains a separate release gate.</p></article>
+          <article class="card card-blue"><p class="card-kicker">Trust chain</p><h3>Signed release + short-lived entitlement</h3><p>Release authenticity and workload authorization are separate: adapters verify signed immutable release metadata, acquire a scoped entitlement, retrieve the exact private engine archive, and verify it again before execution.</p></article>
+          <article class="card card-sand"><p class="card-kicker">Explicit limitation</p><h3>Defense in depth only</h3><p>No build-time client protection is perfect. Envuscator raises extraction cost but does not turn shipped values into durable secrets or replace backend authorization, attestation, rotation, or runtime security.</p></article>
         </div>
       </section>
 
       <section class="section" id="architecture" aria-labelledby="architecture-heading">
         <div class="section-intro">
-          <p class="eyebrow">Target v1 architecture · how protection is delivered</p>
+          <p class="eyebrow">V1 architecture · foundation implemented, activation pending</p>
           <h2 id="architecture-heading">The service licenses the engine. The runner performs the build.</h2>
-          <p>The intended architecture supports the product promise without creating another sensitive build boundary. Provider adapters authenticate a workload, acquire a bounded engine grant, verify an immutable release, and invoke one provider-neutral local engine contract.</p>
+          <p>The implemented trust model avoids creating a second sensitive build boundary. Provider adapters authenticate a workload, verify an immutable release, acquire a bounded engine entitlement, retrieve the exact private engine archive from the fixed service authority, and invoke one provider-neutral local engine contract.</p>
         </div>
         <ol class="architecture-flow">
-          <li><span>01</span><h3>Provider identity</h3><p>GitHub OIDC or GitLab job identity proves repository, namespace, workflow, ref, and environment claims.</p></li>
-          <li><span>02</span><h3>Entitlement exchange</h3><p>A minimal service validates licensing and returns a short-lived grant for an immutable engine release.</p></li>
-          <li><span>03</span><h3>Local engine</h3><p>The runner verifies the release, reads protected local configuration, and applies the Android or iOS protection path.</p></li>
-          <li><span>04</span><h3>Artifact and evidence</h3><p>The runner receives a build-specific AAR or XCFramework plus deterministic provenance metadata and a normalized result.</p></li>
+          <li><span>01</span><h3>Provider identity</h3><p>GitHub OIDC or modern GitLab job identity binds the workload to reviewed provider context. Token-controlled issuer, audience, discovery, and service-origin selection are rejected.</p></li>
+          <li><span>02</span><h3>Entitlement exchange</h3><p>The licensing service evaluates normalized grant state and returns a short-lived engine entitlement. Billing-provider identifiers do not enter the signed workload protocol.</p></li>
+          <li><span>03</span><h3>Verified local engine</h3><p>The runner verifies signed public release metadata, retrieves the exact entitlement-authorized private archive from the fixed service origin, independently verifies archive identity, and runs locally.</p></li>
+          <li><span>04</span><h3>Artifact and evidence</h3><p>The runner receives platform artifacts plus deterministic manifests and normalized evidence while protected configuration, source, private credentials, and build logs remain outside the service.</p></li>
         </ol>
         <div class="boundary-grid">
-          <article class="boundary trusted"><p class="card-kicker">Customer-controlled boundary</p><h3>What must stay in the runner</h3><ul><li>Application source and protected configuration</li><li>Plaintext temporary material and platform toolchains</li><li>Generated artifacts, application binaries, and build logs</li><li>Cleanup, retention, signing, and release policy</li></ul></article>
-          <article class="boundary service"><p class="card-kicker">Envuscator service boundary</p><h3>What the target service may know</h3><ul><li>Verified workload identity and licensed namespace</li><li>Entitlement state and privacy-minimized audit events</li><li>Requested engine version and short-lived grant metadata</li><li>No customer configuration, source, artifacts, or build logs</li></ul></article>
+          <article class="boundary trusted"><p class="card-kicker">Customer-controlled boundary</p><h3>What stays in the runner</h3><ul><li>Application source and protected configuration</li><li>Plaintext temporary material and platform toolchains</li><li>Generated artifacts, application binaries, and build logs</li><li>Cleanup, retention, application signing, and release policy</li></ul></article>
+          <article class="boundary service"><p class="card-kicker">Envuscator service boundary</p><h3>What the service may know</h3><ul><li>Verified workload identity and licensed project/namespace scope</li><li>Privacy-minimized grant, entitlement, and reconciliation state</li><li>Requested immutable engine identity and short-lived authorization metadata</li><li>No customer configuration, source, generated artifacts, or build logs</li></ul></article>
         </div>
       </section>
 
       <section class="section" id="roadmap">
-        <div class="section-intro"><p class="eyebrow">Delivery roadmap</p><h2>Converging on a small, reproducible contract before commercial expansion.</h2></div>
+        <div class="section-intro"><p class="eyebrow">Delivery roadmap</p><h2>The remaining work is qualification and activation around an implemented core.</h2></div>
         <div class="roadmap-grid">
-          <article><span class="status active">In progress</span><h3>Engine contract</h3><p>Versioned requests, categorized failures, deterministic manifests, cleanup guarantees, and real Android/iOS smoke builds.</p></article>
-          <article><span class="status active">In progress</span><h3>Provider adapters</h3><p>GitHub Action and GitLab CI component parity using local configuration paths and one conformance suite.</p></article>
-          <article><span class="status planned">Planned</span><h3>Layered randomization</h3><p>Composable build-specific techniques with explicit compatibility, reproducibility, and failure semantics.</p></article>
-          <article><span class="status planned">Planned</span><h3>Signed distribution</h3><p>Reproducible releases, checksums, signatures, SBOMs, provenance, compatibility policy, and rollback-tested publication.</p></article>
-          <article><span class="status planned">Planned</span><h3>Commercial model</h3><p>Perpetual one-time licensing alongside subscription updates, hosted services, support, and an offline enterprise boundary.</p></article>
-          <article><span class="status planned">Planned</span><h3>Rust orchestration</h3><p>An incremental migration from mixed shell and Python orchestration behind conformance fixtures and real-build parity tests.</p></article>
-          <article><span class="status planned">Planned</span><h3>Public verification</h3><p>Examples, release verification instructions, threat-model documentation, and a single authoritative public deployment.</p></article>
+          <article><span class="status active">Hardening</span><h3>Engine verification gates</h3><p>Linux/Android rootless JIT execution is green. Static-analysis and Android sample-consumer gates are being repaired; native iOS qualification remains separate.</p></article>
+          <article><span class="status active">Activation gated</span><h3>Provider adapters</h3><p>The shared GitHub OIDC and GitLab ID-token authorized paths are implemented internally. Public Action/Component wiring stays disabled until production service and release-trust gates pass.</p></article>
+          <article><span class="status active">Implemented foundation</span><h3>Signed distribution</h3><p>Immutable archive, checksum, signed release statement, verifier, metadata export, trust-candidate tooling, and adapter verification exist. The first real production offline signing identity and public trust are still pending.</p></article>
+          <article><span class="status active">In progress</span><h3>Commercial authority</h3><p>Provider-neutral grants, replay-safe event persistence, commercial source bindings, lifecycle mapping, and durable reconciliation exist. Authoritative Stripe network reconciliation, acquisition binding, and production route activation remain.</p></article>
+          <article><span class="status planned">Later</span><h3>Layered expansion</h3><p>Additional composable build-specific techniques, ABI/toolchain compatibility evidence, broader property/fuzz coverage, and runtime-hooking documentation extend the existing protection model.</p></article>
+          <article><span class="status planned">Later</span><h3>Rust orchestration</h3><p>Rust remains an incremental migration behind stable contracts and conformance tests, not a prerequisite for the first supported v1 release.</p></article>
+          <article><span class="status active">In progress</span><h3>Public verification</h3><p>This repository is the authoritative public documentation and signed-metadata surface. Remaining work includes one final public deployment, security/compatibility guidance, quickstarts, and production release metadata after signing trust is provisioned.</p></article>
         </div>
       </section>
 
       <section class="section honesty">
         <div><p class="eyebrow">Defense in depth</p><h2>No client-side protection is perfect.</h2></div>
-        <div><p>Given sufficient time and resources, a determined attacker can recover values and behavior from a shipped application. Envuscator does not promise permanent client-side secrecy. It increases reverse-engineering cost by producing a unique protected build for each CI execution and combining multiple randomized obfuscation techniques. It complements, rather than replaces, secure backend authorization, secret rotation, hardware-backed key storage, platform attestation, runtime integrity, and a secure SDLC.</p></div>
+        <div><p>Given sufficient time and resources, a determined attacker can recover values and behavior from a shipped application. Envuscator does not promise permanent client-side secrecy. It increases reverse-engineering cost by producing build-specific native output and combining complementary obfuscation techniques. It complements, rather than replaces, secure backend authorization, secret rotation, hardware-backed key storage, platform attestation, runtime integrity, and a secure SDLC.</p></div>
       </section>
 
       <section class="section" id="licensing">
         <div class="section-intro">
           <p class="eyebrow">Licensing philosophy</p>
           <h2>Simple, sustainable licensing without unnecessary lock-in.</h2>
-          <p>The long-term pricing model is intended to always include a perpetual one-time purchase option alongside subscription tiers. Subscription plans may provide ongoing updates, hosted services, and enterprise support, while teams that prefer to own their tooling should retain a perpetual licensing path. These commercial options are planned and are not yet presented as generally available product tiers.</p>
+          <p>The intended pricing model includes a perpetual one-time purchase option alongside recurring plans. Provider-neutral commercial grant and reconciliation foundations are implemented, but checkout, production billing reconciliation, public wrappers, and product tiers are not yet presented as generally available. Paid local/offline licensing is a separate later contract rather than a weaker fallback from CI identity.</p>
         </div>
       </section>
 
