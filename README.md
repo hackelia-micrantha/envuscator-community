@@ -167,9 +167,11 @@ Then open `http://localhost:8080`.
 
 ## Security
 
-Report suspected vulnerabilities privately. Prefer GitHub private vulnerability reporting when available; otherwise use `contact@envuscator.com`. Do not publish vulnerability details in public issues or pull requests.
+Report suspected vulnerabilities privately. Prefer GitHub private vulnerability reporting when available; otherwise use `security.envuscator@micrantha.com`. Do not publish vulnerability details in public issues or pull requests.
 
 See [`SECURITY.md`](./SECURITY.md) for supported-version status, scope, reporting guidance, and the Envuscator security-model boundary.
+
+The deployed static site publishes the machine-readable contact at [`web/.well-known/security.txt`](./web/.well-known/security.txt).
 
 ## Status
 
