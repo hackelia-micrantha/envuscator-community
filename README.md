@@ -46,6 +46,12 @@ The authoritative static surface lives in [`web/`](./web):
 
 The site separates current foundations, work in progress, and target-v1 architecture so planned security properties are not presented as deployed guarantees.
 
+### Visual-system contract
+
+The public site uses the **Phyllotaxis Utility** visual profile: compact, document-first, system-font-based, and intentionally low-decoration while retaining modern accessibility and responsive behavior.
+
+This repository remains dependency-free and has no frontend build step. Until a reviewed public Phyllotaxis package/distribution path is available, `web/styles.css` carries the required Utility Chroma v1 semantic roles locally and `web/micrantha.css` contains only product-owned Micrantha accents. `scripts/verify_site.py` guards the selected `utility` profile and the local semantic-role snapshot so style changes cannot silently drift back to the older decorative marketing treatment.
+
 The release metadata plane is intentionally separate from private engine archive storage. Exact-version metadata uses the reserved layout:
 
 ```text
