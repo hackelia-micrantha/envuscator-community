@@ -13,7 +13,7 @@ Security fixes are applied to the active development line and to promoted releas
 **Do not report suspected vulnerabilities through public issues, pull requests, discussions, or social channels.**
 
 1. **Prefer GitHub private vulnerability reporting** for this repository when that option is available.
-2. If private vulnerability reporting is unavailable, email **contact@envuscator.com** with a subject that clearly identifies the message as a security report.
+2. If private vulnerability reporting is unavailable, email **security.envuscator@micrantha.com**.
 3. Include the affected repository, component, version or commit when known; a concise description; safe reproduction steps; likely impact; and any mitigation you have already identified.
 
 Do not send live credentials, private signing material, customer source/configuration, production data, or unrelated personal information. Share only the minimum sensitive material needed to establish the issue, and coordinate before sending larger exploit artifacts or private logs.
