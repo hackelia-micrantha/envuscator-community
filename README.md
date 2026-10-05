@@ -149,7 +149,7 @@ python3 scripts/test_validate_release_metadata.py
 python3 scripts/validate_release_metadata.py
 ```
 
-Site validation checks HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, Micrantha brand tokens, and current-versus-target state labels.
+Site validation checks HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, the selected Phyllotaxis Utility profile and local Chroma v1 semantic-role snapshot, Micrantha product accent tokens, and current-versus-target state labels.
 
 Release metadata validation rejects unexpected release payloads, archive/key publication, unsafe paths, non-canonical metadata, version/target path mismatches, and statement/descriptor identity disagreement. Cryptographic signature verification remains mandatory in consumers; repository validation does not substitute for it.
 
