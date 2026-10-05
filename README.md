@@ -46,6 +46,8 @@ The authoritative static surface lives in [`web/`](./web):
 
 The site separates current foundations, work in progress, and target-v1 architecture so planned security properties are not presented as deployed guarantees.
 
+See [`docs/compatibility.md`](./docs/compatibility.md) for the public platform, toolchain, engine-host, provider, and artifact compatibility matrix. Contracted targets are explicitly separated from executable qualification and public activation.
+
 ### Visual-system contract
 
 The public site uses the **Phyllotaxis Utility** visual profile: compact, document-first, system-font-based, and intentionally low-decoration while retaining modern accessibility and responsive behavior.

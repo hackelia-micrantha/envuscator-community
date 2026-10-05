@@ -12,7 +12,9 @@ WEB = ROOT / "web"
 INDEX = WEB / "index.html"
 PRIMARY_CSS = WEB / "styles.css"
 SECURITY_POLICY = ROOT / "SECURITY.md"
+COMPATIBILITY = ROOT / "docs" / "compatibility.md"
 SECURITY_POLICY_URL = "https://github.com/hackelia-micrantha/envuscator-community/security/policy"
+COMPATIBILITY_URL = "https://github.com/hackelia-micrantha/envuscator-community/blob/main/docs/compatibility.md"
 
 
 class SiteParser(HTMLParser):
@@ -75,6 +77,7 @@ def main() -> None:
     assert INDEX.is_file(), "web/index.html is missing"
     assert PRIMARY_CSS.is_file(), "web/styles.css is missing"
     assert SECURITY_POLICY.is_file(), "SECURITY.md is missing"
+    assert COMPATIBILITY.is_file(), "docs/compatibility.md is missing"
 
     parser = SiteParser()
     parser.feed(INDEX.read_text(encoding="utf-8"))
@@ -92,6 +95,7 @@ def main() -> None:
         "site must declare exactly one coherent Phyllotaxis Utility profile surface"
     )
     assert SECURITY_POLICY_URL in parser.hrefs, "public site must link security reporting guidance"
+    assert COMPATIBILITY_URL in parser.hrefs, "public site must link compatibility guidance"
 
     for href in parser.hrefs:
         if href.startswith("#"):
