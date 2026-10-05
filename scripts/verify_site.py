@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
 INDEX = WEB / "index.html"
 PRIMARY_CSS = WEB / "styles.css"
+SECURITY_POLICY = ROOT / "SECURITY.md"
+SECURITY_POLICY_URL = "https://github.com/hackelia-micrantha/envuscator-community/security/policy"
 
 
 class SiteParser(HTMLParser):
@@ -72,6 +74,7 @@ def resolve_local_path(href: str) -> Path | None:
 def main() -> None:
     assert INDEX.is_file(), "web/index.html is missing"
     assert PRIMARY_CSS.is_file(), "web/styles.css is missing"
+    assert SECURITY_POLICY.is_file(), "SECURITY.md is missing"
 
     parser = SiteParser()
     parser.feed(INDEX.read_text(encoding="utf-8"))
@@ -88,6 +91,7 @@ def main() -> None:
     assert parser.phyllotaxis_profiles == ["utility"], (
         "site must declare exactly one coherent Phyllotaxis Utility profile surface"
     )
+    assert SECURITY_POLICY_URL in parser.hrefs, "public site must link security reporting guidance"
 
     for href in parser.hrefs:
         if href.startswith("#"):

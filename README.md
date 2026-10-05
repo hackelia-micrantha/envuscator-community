@@ -161,6 +161,12 @@ python3 -m http.server 8080 --directory web
 
 Then open `http://localhost:8080`.
 
+## Security
+
+Report suspected vulnerabilities privately. Prefer GitHub private vulnerability reporting when available; otherwise use `contact@envuscator.com`. Do not publish vulnerability details in public issues or pull requests.
+
+See [`SECURITY.md`](./SECURITY.md) for supported-version status, scope, reporting guidance, and the Envuscator security-model boundary.
+
 ## Status
 
 Envuscator is **Incubating**. The engine/non-custody/entitlement architecture is substantially implemented, while public activation remains gated on production signing and release trust, entitlement-service deployment, provider-adapter promotion, remaining operational qualification, and supported native iOS qualification.
