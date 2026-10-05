@@ -92,6 +92,8 @@ Envuscator v1 is customer-runner-first rather than a hosted customer-build servi
 
 Customer source code, protected mobile configuration, generated artifacts, and build logs remain on customer-controlled runners in the v1 trust boundary. Adapters resolve and verify immutable engine releases and must not require consumer personal access tokens to check out mutable private engine source.
 
+See [`docs/local-runner.md`](./docs/local-runner.md) for the current customer-runner execution boundary and the explicit separation between CI workload identity and future paid local/offline licensing.
+
 Commercial authorization is normalized before it reaches the engine/adapter contract. Payment-provider identifiers are not part of signed workload entitlements.
 
 ## Architecture principles

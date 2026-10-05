@@ -13,8 +13,10 @@ INDEX = WEB / "index.html"
 PRIMARY_CSS = WEB / "styles.css"
 SECURITY_POLICY = ROOT / "SECURITY.md"
 COMPATIBILITY = ROOT / "docs" / "compatibility.md"
+LOCAL_RUNNER = ROOT / "docs" / "local-runner.md"
 SECURITY_POLICY_URL = "https://github.com/hackelia-micrantha/envuscator-community/security/policy"
 COMPATIBILITY_URL = "https://github.com/hackelia-micrantha/envuscator-community/blob/main/docs/compatibility.md"
+LOCAL_RUNNER_URL = "https://github.com/hackelia-micrantha/envuscator-community/blob/main/docs/local-runner.md"
 
 
 class SiteParser(HTMLParser):
@@ -78,6 +80,7 @@ def main() -> None:
     assert PRIMARY_CSS.is_file(), "web/styles.css is missing"
     assert SECURITY_POLICY.is_file(), "SECURITY.md is missing"
     assert COMPATIBILITY.is_file(), "docs/compatibility.md is missing"
+    assert LOCAL_RUNNER.is_file(), "docs/local-runner.md is missing"
 
     parser = SiteParser()
     parser.feed(INDEX.read_text(encoding="utf-8"))
@@ -96,6 +99,7 @@ def main() -> None:
     )
     assert SECURITY_POLICY_URL in parser.hrefs, "public site must link security reporting guidance"
     assert COMPATIBILITY_URL in parser.hrefs, "public site must link compatibility guidance"
+    assert LOCAL_RUNNER_URL in parser.hrefs, "public site must link local-runner guidance"
 
     for href in parser.hrefs:
         if href.startswith("#"):
