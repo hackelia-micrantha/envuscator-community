@@ -18,6 +18,8 @@ Security fixes are applied to the active development line and to promoted releas
 
 Do not send live credentials, private signing material, customer source/configuration, production data, or unrelated personal information. Share only the minimum sensitive material needed to establish the issue, and coordinate before sending larger exploit artifacts or private logs.
 
+The deployed community surface also publishes the same contact in `/.well-known/security.txt`.
+
 ## Scope
 
 Security reports may cover:
