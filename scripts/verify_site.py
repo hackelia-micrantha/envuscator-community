@@ -24,6 +24,7 @@ class SiteParser(HTMLParser):
         self.title_parts: list[str] = []
         self.heading_counts = {"h1": 0, "h2": 0, "h3": 0}
         self.ordered_lists = 0
+        self.phyllotaxis_profiles: list[str] = []
         self._in_title = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -44,6 +45,8 @@ class SiteParser(HTMLParser):
                 self.meta_properties.add(prop)
         if tag in self.heading_counts:
             self.heading_counts[tag] += 1
+        if profile := values.get("data-phyllotaxis-profile"):
+            self.phyllotaxis_profiles.append(profile)
         if tag == "ol":
             self.ordered_lists += 1
         if tag == "title":
@@ -82,6 +85,9 @@ def main() -> None:
     assert parser.heading_counts["h1"] == 1, "site must contain exactly one h1"
     assert parser.heading_counts["h2"] >= 3, "site needs meaningful section headings"
     assert parser.ordered_lists >= 1, "architecture flow must be an ordered list"
+    assert parser.phyllotaxis_profiles == ["utility"], (
+        "site must declare exactly one coherent Phyllotaxis Utility profile surface"
+    )
 
     for href in parser.hrefs:
         if href.startswith("#"):
@@ -106,6 +112,22 @@ def main() -> None:
         )
 
     primary_css = PRIMARY_CSS.read_text(encoding="utf-8")
+    for token in (
+        "--phyllotaxis-space-sm: 0.5rem",
+        "--phyllotaxis-content-width-readable: 70rem",
+        '--phyllotaxis-font-body: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        "--phyllotaxis-type-body-line-height: 1.45",
+        "--phyllotaxis-type-title-size: 1.75rem",
+        "--phyllotaxis-color-canvas: #ffffff",
+        "--phyllotaxis-color-text: #111111",
+        "--phyllotaxis-color-text-muted: #555555",
+        "--phyllotaxis-color-border: #a0a0a0",
+        "--phyllotaxis-color-link: #0000ee",
+        "--phyllotaxis-color-link-visited: #551a8b",
+        "--phyllotaxis-color-focus: #111111",
+    ):
+        assert token in primary_css, f"Phyllotaxis Utility token missing: {token}"
+
     for token in (
         "--brand-ink: #1f2a2a",
         "--brand-leaf: #2f6b55",
