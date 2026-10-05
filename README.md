@@ -171,6 +171,8 @@ Report suspected vulnerabilities privately. Prefer GitHub private vulnerability 
 
 See [`SECURITY.md`](./SECURITY.md) for supported-version status, scope, reporting guidance, and the Envuscator security-model boundary.
 
+The deployed static site publishes the machine-readable contact at [`web/.well-known/security.txt`](./web/.well-known/security.txt).
+
 ## Status
 
 Envuscator is **Incubating**. The engine/non-custody/entitlement architecture is substantially implemented, while public activation remains gated on production signing and release trust, entitlement-service deployment, provider-adapter promotion, remaining operational qualification, and supported native iOS qualification.
