@@ -14,6 +14,7 @@ PRIMARY_CSS = WEB / "styles.css"
 SECURITY_POLICY = ROOT / "SECURITY.md"
 COMPATIBILITY = ROOT / "docs" / "compatibility.md"
 LOCAL_RUNNER = ROOT / "docs" / "local-runner.md"
+SECURITY_TXT = WEB / ".well-known" / "security.txt"
 SECURITY_POLICY_URL = "https://github.com/hackelia-micrantha/envuscator-community/security/policy"
 COMPATIBILITY_URL = "https://github.com/hackelia-micrantha/envuscator-community/blob/main/docs/compatibility.md"
 LOCAL_RUNNER_URL = "https://github.com/hackelia-micrantha/envuscator-community/blob/main/docs/local-runner.md"
@@ -81,6 +82,7 @@ def main() -> None:
     assert SECURITY_POLICY.is_file(), "SECURITY.md is missing"
     assert COMPATIBILITY.is_file(), "docs/compatibility.md is missing"
     assert LOCAL_RUNNER.is_file(), "docs/local-runner.md is missing"
+    assert SECURITY_TXT.is_file(), "web/.well-known/security.txt is missing"
 
     parser = SiteParser()
     parser.feed(INDEX.read_text(encoding="utf-8"))
@@ -122,6 +124,11 @@ def main() -> None:
         assert css.count("{") == css.count("}"), (
             f"CSS braces are unbalanced: {stylesheet.relative_to(ROOT)}"
         )
+
+    security_txt = SECURITY_TXT.read_text(encoding="utf-8")
+    assert "Contact: mailto:security.envuscator@micrantha.com" in security_txt
+    assert "Expires:" in security_txt
+    assert f"Policy: {SECURITY_POLICY_URL}" in security_txt
 
     primary_css = PRIMARY_CSS.read_text(encoding="utf-8")
     for token in (
