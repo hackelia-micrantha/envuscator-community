@@ -157,6 +157,38 @@ def main() -> None:
     ):
         assert token in primary_css, f"Micrantha brand token missing: {token}"
 
+    for motion_contract in (
+        "transition:",
+        "background-color 120ms ease-out",
+        "transform 120ms ease-out",
+        "@media (hover: hover)",
+        "transform: translateY(-1px)",
+        "@media (prefers-reduced-motion: reduce)",
+        "transition-duration: 0ms",
+        "transform: none",
+    ):
+        assert motion_contract in primary_css, (
+            f"bounded interaction-motion contract missing: {motion_contract}"
+        )
+
+    assert ".card:hover" not in primary_css, "static cards must not acquire hover motion"
+    assert ".status:hover" not in primary_css, "static status labels must not acquire hover motion"
+    assert "scale(" not in primary_css, "Utility interaction motion must not use scale/pop effects"
+    assert "animation:" not in primary_css, "ornamental CSS animation is outside the Utility contract"
+
+    accent_css = (WEB / "micrantha.css").read_text(encoding="utf-8")
+    for surface_contract in (
+        ".signal-grid article:nth-child(4n + 1)",
+        ".architecture-flow li:nth-child(4n + 1)",
+        ".roadmap-grid article:nth-child(3n + 1)",
+        "background: #eef6f0",
+        "background: #f2f7fb",
+        "background: #faf6ec",
+    ):
+        assert surface_contract in accent_css, (
+            f"low-chroma surface rhythm missing: {surface_contract}"
+        )
+
     html = INDEX.read_text(encoding="utf-8")
     for required_copy in ("Available now", "Target v1 architecture", "In progress", "Planned"):
         assert required_copy in html, f"project-state label missing: {required_copy}"
