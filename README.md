@@ -50,9 +50,11 @@ See [`docs/compatibility.md`](./docs/compatibility.md) for the public platform, 
 
 ### Visual-system contract
 
-The public site uses the **Phyllotaxis Utility** visual profile: compact, document-first, system-font-based, and intentionally low-decoration while retaining modern accessibility and responsive behavior.
+The public site uses the **Phyllotaxis Utility** visual profile: compact, document-first, system-font-based, and intentionally low-decoration while retaining modern accessibility and responsive behavior. The current composition also uses the accepted flat low-chroma surface rhythm to improve scanning between dense regions.
 
-This repository remains dependency-free and has no frontend build step. Until a reviewed public Phyllotaxis package/distribution path is available, `web/styles.css` carries the required Utility Chroma v1 semantic roles locally and `web/micrantha.css` contains only product-owned Micrantha accents. `scripts/verify_site.py` guards the selected `utility` profile and the local semantic-role snapshot so style changes cannot silently drift back to the older decorative marketing treatment.
+Interaction motion follows the bounded Utility contract: non-motion feedback remains primary, only genuinely interactive controls may move, ordinary hover translation is limited to 1px with short timing, hover movement is gated to hover-capable input, and `prefers-reduced-motion: reduce` removes non-essential movement. Static cards, panels, and status labels remain still.
+
+This repository remains dependency-free and has no frontend build step. Until a reviewed public Phyllotaxis package/distribution path is available, `web/styles.css` carries the required Utility Chroma v1 semantic roles locally and `web/micrantha.css` contains only product-owned Micrantha accents. `scripts/verify_site.py` guards the selected `utility` profile, local semantic-role snapshot, bounded interaction-motion behavior, and low-chroma surface rhythm so style changes cannot silently drift back to the older decorative marketing treatment.
 
 The release metadata plane is intentionally separate from private engine archive storage. Exact-version metadata uses the reserved layout:
 
