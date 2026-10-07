@@ -42,6 +42,30 @@ body {
   background: #eef6f0;
 }
 
+/* Flat low-chroma surface rhythm for dense information grids. */
+.signal-grid article:nth-child(4n + 1),
+.architecture-flow li:nth-child(4n + 1),
+.roadmap-grid article:nth-child(3n + 1) {
+  background: #eef6f0;
+}
+
+.signal-grid article:nth-child(4n + 2),
+.architecture-flow li:nth-child(4n + 2),
+.roadmap-grid article:nth-child(3n + 2) {
+  background: #f2f7fb;
+}
+
+.signal-grid article:nth-child(4n + 3),
+.architecture-flow li:nth-child(4n + 3),
+.roadmap-grid article:nth-child(3n) {
+  background: #faf6ec;
+}
+
+.signal-grid article:nth-child(4n),
+.architecture-flow li:nth-child(4n) {
+  background: var(--brand-paper);
+}
+
 .card-green,
 .trusted,
 .status.active {
