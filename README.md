@@ -48,14 +48,6 @@ The site separates current foundations, work in progress, and target-v1 architec
 
 See [`docs/compatibility.md`](./docs/compatibility.md) for the public platform, toolchain, engine-host, provider, and artifact compatibility matrix. Contracted targets are explicitly separated from executable qualification and public activation.
 
-### Visual-system contract
-
-The public site uses the **Phyllotaxis Utility** visual profile: compact, document-first, system-font-based, and intentionally low-decoration while retaining modern accessibility and responsive behavior. Its surface balance follows the current Digitalis-style Utility composition: restrained colour primarily at the section or semantic-boundary level, with dense card grids kept mostly neutral.
-
-Interaction feedback remains bounded. Genuine controls may use the accepted 1px/short-duration hover movement; static cards use only a restrained background/border transition and never translate or scale. Hover behavior is gated to hover-capable input, and `prefers-reduced-motion: reduce` removes transition animation while preserving the visible state change.
-
-This repository remains dependency-free and has no frontend build step. Until a reviewed public Phyllotaxis package/distribution path is available, `web/styles.css` carries the required Utility Chroma v1 semantic roles locally and `web/micrantha.css` contains only product-owned Micrantha accents. `scripts/verify_site.py` guards the selected `utility` profile, local semantic-role snapshot, bounded interaction behavior, restrained card hover treatment, and section-led surface balance.
-
 The release metadata plane is intentionally separate from private engine archive storage. Exact-version metadata uses the reserved layout:
 
 ```text
@@ -155,7 +147,7 @@ python3 scripts/test_validate_release_metadata.py
 python3 scripts/validate_release_metadata.py
 ```
 
-Site validation checks HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, the selected Phyllotaxis Utility profile and local Chroma v1 semantic-role snapshot, Micrantha product accent tokens, and current-versus-target state labels.
+Site validation checks HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, Micrantha brand tokens, and current-versus-target state labels.
 
 Release metadata validation rejects unexpected release payloads, archive/key publication, unsafe paths, non-canonical metadata, version/target path mismatches, and statement/descriptor identity disagreement. Cryptographic signature verification remains mandatory in consumers; repository validation does not substitute for it.
 
