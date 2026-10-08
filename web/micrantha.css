@@ -18,13 +18,13 @@ body {
 }
 
 .hero {
-  border-color: #b9b09e;
-  background: var(--brand-sand);
+  border-color: #a9bdb3;
+  background: var(--brand-mist);
 }
 
 #available {
-  border-color: #a9bdb3;
-  background: #eef6f0;
+  border-color: #b9b09e;
+  background: var(--phyllotaxis-color-canvas);
 }
 
 #architecture {
@@ -38,48 +38,26 @@ body {
 }
 
 #licensing {
-  border-color: #a9bdb3;
-  background: #eef6f0;
+  border-color: #b9b09e;
+  background: var(--phyllotaxis-color-canvas);
 }
 
-/* Flat low-chroma surface rhythm for dense information grids. */
-.signal-grid article:nth-child(4n + 1),
-.architecture-flow li:nth-child(4n + 1),
-.roadmap-grid article:nth-child(3n + 1) {
-  background: #eef6f0;
+/* Digitalis-inspired balance: section colour carries rhythm; dense cards stay quiet. */
+.signal-grid article,
+.card,
+.roadmap-grid article,
+.architecture-flow li {
+  background: rgba(255, 255, 255, 0.78);
 }
 
-.signal-grid article:nth-child(4n + 2),
-.architecture-flow li:nth-child(4n + 2),
-.roadmap-grid article:nth-child(3n + 2) {
-  background: #f2f7fb;
-}
-
-.signal-grid article:nth-child(4n + 3),
-.architecture-flow li:nth-child(4n + 3),
-.roadmap-grid article:nth-child(3n) {
-  background: #faf6ec;
-}
-
-.signal-grid article:nth-child(4n),
-.architecture-flow li:nth-child(4n) {
-  background: var(--brand-paper);
-}
-
-.card-green,
 .trusted,
 .status.active {
   background: var(--brand-mist);
 }
 
-.card-blue,
 .service,
 .status.planned {
   background: var(--brand-sky);
-}
-
-.card-sand {
-  background: var(--brand-sand);
 }
 
 .honesty {
