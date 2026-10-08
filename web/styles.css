@@ -317,6 +317,20 @@ nav {
   border: 1px solid var(--phyllotaxis-color-border);
   background: var(--phyllotaxis-color-canvas);
   padding: var(--phyllotaxis-space-md);
+  transition:
+    background-color 140ms ease-out,
+    border-color 140ms ease-out;
+}
+
+@media (hover: hover) {
+  .signal-grid article:hover,
+  .card:hover,
+  .roadmap-grid article:hover,
+  .boundary:hover,
+  .architecture-flow li:hover {
+    border-color: var(--brand-leaf);
+    background: var(--phyllotaxis-color-surface);
+  }
 }
 
 .signal-grid strong {
@@ -486,7 +500,12 @@ footer p {
 
   .button,
   .button:hover,
-  .button:active {
+  .button:active,
+  .signal-grid article,
+  .card,
+  .roadmap-grid article,
+  .boundary,
+  .architecture-flow li {
     transition-duration: 0ms;
     transform: none;
   }

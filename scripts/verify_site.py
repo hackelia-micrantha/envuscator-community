@@ -171,23 +171,49 @@ def main() -> None:
             f"bounded interaction-motion contract missing: {motion_contract}"
         )
 
-    assert ".card:hover" not in primary_css, "static cards must not acquire hover motion"
-    assert ".status:hover" not in primary_css, "static status labels must not acquire hover motion"
+    for card_hover_contract in (
+        "background-color 140ms ease-out",
+        "border-color 140ms ease-out",
+        ".signal-grid article:hover",
+        ".card:hover",
+        ".roadmap-grid article:hover",
+        ".boundary:hover",
+        ".architecture-flow li:hover",
+    ):
+        assert card_hover_contract in primary_css, (
+            f"restrained card hover contract missing: {card_hover_contract}"
+        )
+
+    assert primary_css.count("transform: translateY(-1px)") == 1, (
+        "only genuine interactive controls may use positional hover movement"
+    )
+    assert ".status:hover" not in primary_css, "status labels must not acquire hover animation"
     assert "scale(" not in primary_css, "Utility interaction motion must not use scale/pop effects"
     assert "animation:" not in primary_css, "ornamental CSS animation is outside the Utility contract"
 
     accent_css = (WEB / "micrantha.css").read_text(encoding="utf-8")
     for surface_contract in (
-        ".signal-grid article:nth-child(4n + 1)",
-        ".architecture-flow li:nth-child(4n + 1)",
-        ".roadmap-grid article:nth-child(3n + 1)",
-        "background: #eef6f0",
+        "background: var(--brand-mist)",
+        "#available",
+        "background: var(--phyllotaxis-color-canvas)",
+        "#architecture",
         "background: #f2f7fb",
+        "#roadmap",
         "background: #faf6ec",
+        "background: rgba(255, 255, 255, 0.78)",
     ):
         assert surface_contract in accent_css, (
-            f"low-chroma surface rhythm missing: {surface_contract}"
+            f"restrained surface contract missing: {surface_contract}"
         )
+    assert ".signal-grid article:nth-child" not in accent_css, (
+        "dense signal cards must not use alternating pastel fills"
+    )
+    assert ".roadmap-grid article:nth-child" not in accent_css, (
+        "roadmap cards must not use alternating pastel fills"
+    )
+    assert ".architecture-flow li:nth-child" not in accent_css, (
+        "architecture cards must not use alternating pastel fills"
+    )
 
     html = INDEX.read_text(encoding="utf-8")
     for required_copy in ("Available now", "Target v1 architecture", "In progress", "Planned"):
