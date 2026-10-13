@@ -137,6 +137,10 @@ These are explicit trust and ownership boundaries. A public site does not create
 - **Bluebell** provides reusable Kotlin Multiplatform build and SDK patterns.
 - **Mobuild** provides wider modular mobile-build architecture and coordination; Envuscator repositories retain authority over their own implementation and security contracts.
 
+## Synthetic integration demonstration
+
+A dependency-free [synthetic customer-runner adapter example](./examples/synthetic-adapter/README.md) illustrates deterministic per-build fixture outputs, an example manifest and result, and fail-closed local file-input rules. It is **not** a native engine build, real obfuscation protection, a production adapter, or a published release. CI verifies both success and negative cases; no generated example payloads or private assets are published.
+
 ## Validation
 
 The repository includes dependency-free validation scripts and GitHub Actions coverage.
@@ -145,6 +149,7 @@ The repository includes dependency-free validation scripts and GitHub Actions co
 python3 scripts/verify_site.py
 python3 scripts/test_validate_release_metadata.py
 python3 scripts/validate_release_metadata.py
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s examples/synthetic-adapter/tests -p 'test_*.py'
 ```
 
 Site validation checks HTML parsing, internal fragment links, metadata, heading structure, semantic architecture markup, stylesheet resolution, balanced CSS, Micrantha brand tokens, and current-versus-target state labels.
