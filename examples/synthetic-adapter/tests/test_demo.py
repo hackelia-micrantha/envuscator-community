@@ -136,13 +136,13 @@ class SyntheticContractTests(unittest.TestCase):
         original_open = demo.os.open
         attempted = 0
 
-        def fail_second_artifact(path, flags, mode=0o777):
+        def fail_second_artifact(path, flags, mode=0o777, **kwargs):
             nonlocal attempted
             if str(path).startswith(str(destination)):
                 attempted += 1
                 if attempted == 2:
                     raise OSError("synthetic disk failure")
-            return original_open(path, flags, mode)
+            return original_open(path, flags, mode, **kwargs)
 
         with mock.patch.object(demo.os, "open", side_effect=fail_second_artifact):
             with self.assertRaises(demo.DemoDenied):
