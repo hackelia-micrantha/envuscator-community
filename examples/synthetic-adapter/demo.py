@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import stat
 import sys
 
@@ -128,14 +129,21 @@ def execute(config: Path, output: Path, build_id: str, platform: str, build_type
     names = ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json")
     # Avoid overwriting unrelated customer files or following a pre-existing
     # output-directory symlink. One new, private directory per demonstration.
+    created = False
     try:
         output.mkdir(mode=0o700, parents=False, exist_ok=False)
+        created = True
         for name, blob in zip(names, blobs):
             fd = os.open(output / name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
             with os.fdopen(fd, "wb") as handle:
                 handle.write(blob)
     except OSError as error:
-        raise DemoDenied("cannot create fresh private output directory") from error
+        if created:
+            try:
+                shutil.rmtree(output)
+            except OSError as cleanup_error:
+                raise DemoDenied("cannot clean up incomplete synthetic output") from cleanup_error
+        raise DemoDenied("cannot create complete synthetic output") from error
 
 
 def main() -> int:
