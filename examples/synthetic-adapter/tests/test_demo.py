@@ -17,6 +17,18 @@ sys.path.insert(0, str(HERE))
 import demo  # noqa: E402
 
 
+def tracked_public_files() -> set[str]:
+    root = HERE.parents[1]
+    tracked = subprocess.check_output(
+        ["git", "-C", str(root), "ls-files", "-z", "--", "examples/synthetic-adapter"]
+    )
+    prefix = "examples/synthetic-adapter/"
+    return {
+        entry.decode("utf-8")[len(prefix):]
+        for entry in tracked.split(bytes([0])) if entry
+    }
+
+
 class SyntheticContractTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -140,28 +152,16 @@ class SyntheticContractTests(unittest.TestCase):
 
     def test_publication_allowlist(self):
         approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
-        # Runtime caches are irrelevant; Git's tracked index is the public
-        # publication boundary, including any tracked __pycache__ entries.
-        root = HERE.parents[1]
-        tracked = subprocess.check_output(
-            ["git", "-C", str(root), "ls-files", "-z", "--", "examples/synthetic-adapter"]
+        self.assertEqual(
+            tracked_public_files(), approved,
+            "unexpected tracked public example file; review its provenance before publishing",
         )
-        prefix = "examples/synthetic-adapter/"
-        actual = {
-            entry.decode("utf-8")[len(prefix):]
-            for entry in tracked.split(b"\\0") if entry
-        }
-        self.assertEqual(actual, approved, "unexpected tracked public example file; review its provenance before publishing")
 
     def test_publication_allowlist_detects_tracked_bytecode(self):
-        # The allowlist includes tracked pycache entries, even if ignored at runtime.
-        root = HERE.parents[1]
+        approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
         target = "examples/synthetic-adapter/__pycache__/demo.cpython-313.pyc"
-        with mock.patch.object(subprocess, "check_output", return_value=target.encode() + b"\\0"):
-            tracked = subprocess.check_output(
-                ["git", "-C", str(root), "ls-files", "-z", "--", "examples/synthetic-adapter"]
-            )
-        self.assertIn(b"__pycache__", tracked)
+        with mock.patch.object(subprocess, "check_output", return_value=target.encode() + bytes([0])):
+            self.assertNotEqual(tracked_public_files(), approved)
 
     def test_fixture_has_only_public_data_and_no_private_artifacts(self):
         fixture = (HERE / "fixtures" / "sample.env").read_text()
