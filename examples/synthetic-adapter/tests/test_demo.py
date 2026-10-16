@@ -138,7 +138,7 @@ class SyntheticContractTests(unittest.TestCase):
 
         def fail_second_artifact(path, flags, mode=0o777, **kwargs):
             nonlocal attempted
-            if str(path).startswith(str(destination)):
+            if kwargs.get("dir_fd") is not None and str(path) in ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json"):
                 attempted += 1
                 if attempted == 2:
                     raise OSError("synthetic disk failure")
@@ -149,6 +149,30 @@ class SyntheticContractTests(unittest.TestCase):
                 demo.execute(self.config, destination, "fixture-A", "android", "Debug")
         self.assertFalse(destination.exists())
         self.output("incomplete")
+
+    def test_replaced_output_does_not_delete_unrelated_directory(self):
+        destination = self.root / "race-output"
+        moved = self.root / "moved-original"
+        original_open = demo.os.open
+        mutated = False
+
+        def replace_before_second_write(path, flags, mode=0o777, **kwargs):
+            nonlocal mutated
+            if (path == "synthetic-manifest.json" and kwargs.get("dir_fd") is not None
+                    and not mutated):
+                mutated = True
+                destination.rename(moved)
+                destination.mkdir()
+                (destination / "unrelated.txt").write_text("keep")
+                raise OSError("synthetic race/failure")
+            return original_open(path, flags, mode, **kwargs)
+
+        with mock.patch.object(demo.os, "open", side_effect=replace_before_second_write):
+            with self.assertRaises(demo.DemoDenied):
+                demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertTrue(mutated)
+        self.assertEqual((destination / "unrelated.txt").read_text(), "keep")
+        self.assertEqual(list(moved.iterdir()), [])
 
     def test_publication_allowlist(self):
         approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
