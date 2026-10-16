@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
@@ -118,13 +119,49 @@ class SyntheticContractTests(unittest.TestCase):
         self.assertEqual((artifact["platform"], artifact["build_type"]), ("ios", "Release"))
         self.assertNotIn("XCFramework", str(artifact))
 
+    def test_partial_write_failure_removes_synthetic_output(self):
+        destination = self.root / "incomplete"
+        original_open = demo.os.open
+        attempted = 0
+
+        def fail_second_artifact(path, flags, mode=0o777):
+            nonlocal attempted
+            if str(path).startswith(str(destination)):
+                attempted += 1
+                if attempted == 2:
+                    raise OSError("synthetic disk failure")
+            return original_open(path, flags, mode)
+
+        with mock.patch.object(demo.os, "open", side_effect=fail_second_artifact):
+            with self.assertRaises(demo.DemoDenied):
+                demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertFalse(destination.exists())
+        self.output("incomplete")
+
     def test_publication_allowlist(self):
         approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
+        # Runtime caches are irrelevant; Git's tracked index is the public
+        # publication boundary, including any tracked __pycache__ entries.
+        root = HERE.parents[1]
+        tracked = subprocess.check_output(
+            ["git", "-C", str(root), "ls-files", "-z", "--", "examples/synthetic-adapter"]
+        )
+        prefix = "examples/synthetic-adapter/"
         actual = {
-            path.relative_to(HERE).as_posix() for path in HERE.rglob("*")
-            if path.is_file() and "__pycache__" not in path.parts
+            entry.decode("utf-8")[len(prefix):]
+            for entry in tracked.split(b"\\0") if entry
         }
-        self.assertEqual(actual, approved, "unexpected public example file; review its provenance before publishing")
+        self.assertEqual(actual, approved, "unexpected tracked public example file; review its provenance before publishing")
+
+    def test_publication_allowlist_detects_tracked_bytecode(self):
+        # The allowlist includes tracked pycache entries, even if ignored at runtime.
+        root = HERE.parents[1]
+        target = "examples/synthetic-adapter/__pycache__/demo.cpython-313.pyc"
+        with mock.patch.object(subprocess, "check_output", return_value=target.encode() + b"\\0"):
+            tracked = subprocess.check_output(
+                ["git", "-C", str(root), "ls-files", "-z", "--", "examples/synthetic-adapter"]
+            )
+        self.assertIn(b"__pycache__", tracked)
 
     def test_fixture_has_only_public_data_and_no_private_artifacts(self):
         fixture = (HERE / "fixtures" / "sample.env").read_text()
