@@ -12,7 +12,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import stat
 import sys
 
@@ -127,23 +126,45 @@ def execute(config: Path, output: Path, build_id: str, platform: str, build_type
     data = load_local_config(config)
     blobs = render(data, build_id, platform, build_type)
     names = ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json")
-    # Avoid overwriting unrelated customer files or following a pre-existing
-    # output-directory symlink. One new, private directory per demonstration.
-    created = False
+    # Pin all writes and cleanup to the inode created by this invocation.
+    # A concurrently replaced output path must never be recursively removed.
+    directory_fd = None
+    created_identity = None
+    written = []
     try:
         output.mkdir(mode=0o700, parents=False, exist_ok=False)
-        created = True
+        directory_fd = os.open(output, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        identity = os.fstat(directory_fd)
+        created_identity = (identity.st_dev, identity.st_ino)
+        if not stat.S_ISDIR(identity.st_mode):
+            raise OSError("output directory changed")
         for name, blob in zip(names, blobs):
-            fd = os.open(output / name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+            fd = os.open(
+                name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
+                0o600, dir_fd=directory_fd,
+            )
+            written.append(name)
             with os.fdopen(fd, "wb") as handle:
                 handle.write(blob)
+        if (output.lstat().st_dev, output.lstat().st_ino) != created_identity:
+            raise OSError("output directory replaced during generation")
     except OSError as error:
-        if created:
+        if directory_fd is not None:
+            # Unlink only files created via our pinned directory descriptor.
+            # Never traverse the mutable output path during cleanup.
             try:
-                shutil.rmtree(output)
+                for name in reversed(written):
+                    os.unlink(name, dir_fd=directory_fd)
+                if (output.lstat().st_dev, output.lstat().st_ino) == created_identity:
+                    output.rmdir()
+            except FileNotFoundError:
+                pass  # The parent entry was removed or moved concurrently.
             except OSError as cleanup_error:
                 raise DemoDenied("cannot clean up incomplete synthetic output") from cleanup_error
         raise DemoDenied("cannot create complete synthetic output") from error
+    finally:
+        if directory_fd is not None:
+            os.close(directory_fd)
 
 
 def main() -> int:
