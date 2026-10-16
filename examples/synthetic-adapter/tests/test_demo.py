@@ -10,10 +10,23 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 import demo  # noqa: E402
+
+
+def tracked_public_files() -> set[str]:
+    root = HERE.parents[1]
+    tracked = subprocess.check_output(
+        ["git", "-C", str(root), "ls-files", "-z", "--", "examples/synthetic-adapter"]
+    )
+    prefix = "examples/synthetic-adapter/"
+    return {
+        entry.decode("utf-8")[len(prefix):]
+        for entry in tracked.split(bytes([0])) if entry
+    }
 
 
 class SyntheticContractTests(unittest.TestCase):
@@ -118,13 +131,61 @@ class SyntheticContractTests(unittest.TestCase):
         self.assertEqual((artifact["platform"], artifact["build_type"]), ("ios", "Release"))
         self.assertNotIn("XCFramework", str(artifact))
 
+    def test_partial_write_failure_removes_synthetic_output(self):
+        destination = self.root / "incomplete"
+        original_open = demo.os.open
+        attempted = 0
+
+        def fail_second_artifact(path, flags, mode=0o777, **kwargs):
+            nonlocal attempted
+            if kwargs.get("dir_fd") is not None and str(path) in ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json"):
+                attempted += 1
+                if attempted == 2:
+                    raise OSError("synthetic disk failure")
+            return original_open(path, flags, mode, **kwargs)
+
+        with mock.patch.object(demo.os, "open", side_effect=fail_second_artifact):
+            with self.assertRaises(demo.DemoDenied):
+                demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertFalse(destination.exists())
+        self.output("incomplete")
+
+    def test_replaced_output_does_not_delete_unrelated_directory(self):
+        destination = self.root / "race-output"
+        moved = self.root / "moved-original"
+        original_open = demo.os.open
+        mutated = False
+
+        def replace_before_second_write(path, flags, mode=0o777, **kwargs):
+            nonlocal mutated
+            if (path == "synthetic-manifest.json" and kwargs.get("dir_fd") is not None
+                    and not mutated):
+                mutated = True
+                destination.rename(moved)
+                destination.mkdir()
+                (destination / "unrelated.txt").write_text("keep")
+                raise OSError("synthetic race/failure")
+            return original_open(path, flags, mode, **kwargs)
+
+        with mock.patch.object(demo.os, "open", side_effect=replace_before_second_write):
+            with self.assertRaises(demo.DemoDenied):
+                demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertTrue(mutated)
+        self.assertEqual((destination / "unrelated.txt").read_text(), "keep")
+        self.assertEqual(list(moved.iterdir()), [])
+
     def test_publication_allowlist(self):
         approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
-        actual = {
-            path.relative_to(HERE).as_posix() for path in HERE.rglob("*")
-            if path.is_file() and "__pycache__" not in path.parts
-        }
-        self.assertEqual(actual, approved, "unexpected public example file; review its provenance before publishing")
+        self.assertEqual(
+            tracked_public_files(), approved,
+            "unexpected tracked public example file; review its provenance before publishing",
+        )
+
+    def test_publication_allowlist_detects_tracked_bytecode(self):
+        approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
+        target = "examples/synthetic-adapter/__pycache__/demo.cpython-313.pyc"
+        with mock.patch.object(subprocess, "check_output", return_value=target.encode() + bytes([0])):
+            self.assertNotEqual(tracked_public_files(), approved)
 
     def test_fixture_has_only_public_data_and_no_private_artifacts(self):
         fixture = (HERE / "fixtures" / "sample.env").read_text()
