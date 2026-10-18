@@ -92,7 +92,7 @@ def main() -> None:
     assert {tuple(sorted(route.items())) for route in public_routes} == {
         (("custom_domain", True), ("pattern", "envuscator.com")),
         (("custom_domain", True), ("pattern", "envuscator.micrantha.com")),
-        (("pattern", "www.envuscator.com/*"), ("zone_name", "envuscator.com")),
+        (("pattern", "www.envuscator.com/*"), ("zone_id", "5d05984cca18412664e6a5533ca95a09")),
     }, "unexpected public Worker routes: verify Cloudflare routing and DNS before merging"
 
     parser = SiteParser()
