@@ -22,6 +22,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
+      - name: Require Python 3.11+ for route validation
+        run: python3 -c 'import sys; assert sys.version_info >= (3, 11), "site validation requires Python 3.11+"'
+
       - name: Run signed release metadata contract tests
         run: python3 scripts/test_validate_release_metadata.py
 
