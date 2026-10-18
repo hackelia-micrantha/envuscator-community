@@ -128,8 +128,11 @@ def _publish_no_replace(staged: Path, output: Path) -> None:
     replaces even an empty destination directory. No unsafe fallback is used.
     Both parent directories are pinned by file descriptor for the syscall.
     """
-    if output.name in ("", ".", ".."):
-        raise OSError(errno.EINVAL, "invalid output directory name")
+    source_name = os.fsencode(staged.name)
+    destination_name = os.fsencode(output.name)
+    if (not destination_name or destination_name in (b".", b"..")
+            or 0 in destination_name or 0 in source_name):
+        raise OSError(errno.EINVAL, "invalid publication directory name")
     try:
         libc = ctypes.CDLL(None, use_errno=True)
         renameat2 = libc.renameat2
@@ -140,17 +143,27 @@ def _publish_no_replace(staged: Path, output: Path) -> None:
     renameat2.restype = ctypes.c_int
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
     source_fd = os.open(staged.parent, flags)
+    committed = False
     try:
         target_fd = os.open(output.parent, flags)
         try:
-            if renameat2(source_fd, os.fsencode(staged.name),
-                         target_fd, os.fsencode(output.name), 1) != 0:
+            if renameat2(source_fd, source_name,
+                         target_fd, destination_name, 1) != 0:
                 code = ctypes.get_errno()
                 raise OSError(code, os.strerror(code))
+            committed = True
         finally:
-            os.close(target_fd)
+            try:
+                os.close(target_fd)
+            except OSError:
+                if not committed:
+                    raise
     finally:
-        os.close(source_fd)
+        try:
+            os.close(source_fd)
+        except OSError:
+            if not committed:
+                raise
 
 
 def execute(config: Path, output: Path, build_id: str, platform: str, build_type: str) -> None:
@@ -165,6 +178,7 @@ def execute(config: Path, output: Path, build_id: str, platform: str, build_type
     # never appear in the output namespace. The staging workspace must be a
     # trusted private local temporary directory; hostile same-UID access to
     # that workspace is outside this demonstration's isolation contract.
+    published = False
     try:
         with tempfile.TemporaryDirectory(prefix="envuscator-synthetic-") as workspace:
             staged = Path(workspace) / "complete"
@@ -176,8 +190,12 @@ def execute(config: Path, output: Path, build_id: str, platform: str, build_type
                     handle.write(blob)
             # Single atomic no-clobber publication; never unlink/rmdir output.
             _publish_no_replace(staged, output)
+            published = True
     except OSError as error:
-        raise DemoDenied("cannot create complete private synthetic output") from error
+        # Publication is a commit point: cleanup failures afterward must
+        # not report failure for an already-published, complete directory.
+        if not published:
+            raise DemoDenied("cannot create complete private synthetic output") from error
 
 
 def main() -> int:
