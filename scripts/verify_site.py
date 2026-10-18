@@ -136,6 +136,12 @@ def main() -> None:
         assert token in primary_css, f"Micrantha brand token missing: {token}"
 
     html = INDEX.read_text(encoding="utf-8")
+    assert '<link rel="canonical" href="https://envuscator.com/" />' in html, (
+        "the public site must identify the verified primary hostname"
+    )
+    assert "Open concept demo" not in html, (
+        "the Micrantha alias is not a separate concept demo"
+    )
     for required_copy in ("Available now", "Target v1 architecture", "In progress", "Planned"):
         assert required_copy in html, f"project-state label missing: {required_copy}"
 
