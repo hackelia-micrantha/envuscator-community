@@ -7,6 +7,8 @@ This is NOT the commercial Envuscator adapter, engine, crypto or a native build.
 from __future__ import annotations
 
 import argparse
+import ctypes
+import errno
 import hashlib
 import json
 import os
@@ -14,6 +16,7 @@ from pathlib import Path
 import re
 import stat
 import sys
+import tempfile
 
 MAX_BYTES = 1024 * 1024
 MAX_ENTRIES = 1024
@@ -118,6 +121,38 @@ def render(config: dict[str, bytes], build_id: str, platform: str, build_type: s
     return artifact, manifest, evidence
 
 
+def _publish_no_replace(staged: Path, output: Path) -> None:
+    """Atomically publish a complete directory, refusing an occupied destination.
+
+    Linux renameat2(RENAME_NOREPLACE) is required. Unlike rename(), it never
+    replaces even an empty destination directory. No unsafe fallback is used.
+    Both parent directories are pinned by file descriptor for the syscall.
+    """
+    if output.name in ("", ".", ".."):
+        raise OSError(errno.EINVAL, "invalid output directory name")
+    try:
+        libc = ctypes.CDLL(None, use_errno=True)
+        renameat2 = libc.renameat2
+    except AttributeError as error:
+        raise OSError(errno.ENOSYS, "atomic no-replace publish unavailable") from error
+    renameat2.argtypes = (ctypes.c_int, ctypes.c_char_p,
+                          ctypes.c_int, ctypes.c_char_p, ctypes.c_uint)
+    renameat2.restype = ctypes.c_int
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    source_fd = os.open(staged.parent, flags)
+    try:
+        target_fd = os.open(output.parent, flags)
+        try:
+            if renameat2(source_fd, os.fsencode(staged.name),
+                         target_fd, os.fsencode(output.name), 1) != 0:
+                code = ctypes.get_errno()
+                raise OSError(code, os.strerror(code))
+        finally:
+            os.close(target_fd)
+    finally:
+        os.close(source_fd)
+
+
 def execute(config: Path, output: Path, build_id: str, platform: str, build_type: str) -> None:
     if not BUILD_RE.fullmatch(build_id):
         raise DemoDenied("invalid build identifier")
@@ -126,45 +161,23 @@ def execute(config: Path, output: Path, build_id: str, platform: str, build_type
     data = load_local_config(config)
     blobs = render(data, build_id, platform, build_type)
     names = ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json")
-    # Pin all writes and cleanup to the inode created by this invocation.
-    # A concurrently replaced output path must never be recursively removed.
-    directory_fd = None
-    created_identity = None
-    written = []
+    # Stage outside the caller-controlled output parent. Incomplete artifacts
+    # never appear in the output namespace. The staging workspace must be a
+    # trusted private local temporary directory; hostile same-UID access to
+    # that workspace is outside this demonstration's isolation contract.
     try:
-        output.mkdir(mode=0o700, parents=False, exist_ok=False)
-        directory_fd = os.open(output, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
-        identity = os.fstat(directory_fd)
-        created_identity = (identity.st_dev, identity.st_ino)
-        if not stat.S_ISDIR(identity.st_mode):
-            raise OSError("output directory changed")
-        for name, blob in zip(names, blobs):
-            fd = os.open(
-                name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
-                0o600, dir_fd=directory_fd,
-            )
-            written.append(name)
-            with os.fdopen(fd, "wb") as handle:
-                handle.write(blob)
-        if (output.lstat().st_dev, output.lstat().st_ino) != created_identity:
-            raise OSError("output directory replaced during generation")
+        with tempfile.TemporaryDirectory(prefix="envuscator-synthetic-") as workspace:
+            staged = Path(workspace) / "complete"
+            staged.mkdir(mode=0o700, exist_ok=False)
+            for name, blob in zip(names, blobs):
+                fd = os.open(staged / name,
+                             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+                with os.fdopen(fd, "wb") as handle:
+                    handle.write(blob)
+            # Single atomic no-clobber publication; never unlink/rmdir output.
+            _publish_no_replace(staged, output)
     except OSError as error:
-        if directory_fd is not None:
-            # Unlink only files created via our pinned directory descriptor.
-            # Never traverse the mutable output path during cleanup.
-            try:
-                for name in reversed(written):
-                    os.unlink(name, dir_fd=directory_fd)
-                if (output.lstat().st_dev, output.lstat().st_ino) == created_identity:
-                    output.rmdir()
-            except FileNotFoundError:
-                pass  # The parent entry was removed or moved concurrently.
-            except OSError as cleanup_error:
-                raise DemoDenied("cannot clean up incomplete synthetic output") from cleanup_error
-        raise DemoDenied("cannot create complete synthetic output") from error
-    finally:
-        if directory_fd is not None:
-            os.close(directory_fd)
+        raise DemoDenied("cannot create complete private synthetic output") from error
 
 
 def main() -> int:
