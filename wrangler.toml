@@ -1,5 +1,20 @@
 name = "envuscator-community"
 compatibility_date = "2026-07-27"
 
+# Keep public Worker routing in source control. Apex and Micrantha hosts are
+# Custom Domains; www is an existing proxied CNAME served by a Worker Route.
+# Never replace the www route with a Custom Domain while that CNAME exists.
+[[routes]]
+pattern = "envuscator.com"
+custom_domain = true
+
+[[routes]]
+pattern = "envuscator.micrantha.com"
+custom_domain = true
+
+[[routes]]
+pattern = "www.envuscator.com/*"
+zone_name = "envuscator.com"
+
 [assets]
 directory = "./web"
