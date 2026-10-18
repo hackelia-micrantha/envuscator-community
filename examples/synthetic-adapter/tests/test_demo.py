@@ -190,6 +190,49 @@ class SyntheticContractTests(unittest.TestCase):
         self.assertTrue(mutated)
         self.assertEqual((destination / "synthetic-artifact.json").read_text(), "unrelated")
 
+    def test_reject_embedded_nul_without_truncated_publication(self):
+        truncated_target = self.root / "victim"
+        with self.assertRaises(demo.DemoDenied):
+            demo.execute(self.config, self.root / "victim\\x00suffix",
+                         "fixture-A", "android", "Debug")
+        self.assertFalse(truncated_target.exists())
+
+    def test_close_error_after_atomic_publish_does_not_report_failure(self):
+        destination = self.root / "committed"
+        original_close = demo.os.close
+        failed = False
+
+        def close_after_commit(fd):
+            nonlocal failed
+            original_close(fd)
+            if destination.exists() and not failed:
+                failed = True
+                raise OSError("simulated descriptor close failure")
+
+        with mock.patch.object(demo.os, "close", side_effect=close_after_commit):
+            demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertTrue(failed)
+        self.assertEqual(len(list(destination.iterdir())), 3)
+
+    def test_temp_cleanup_error_after_atomic_publish_is_success(self):
+        destination = self.root / "committed-cleanup-error"
+        original_temporary_directory = demo.tempfile.TemporaryDirectory
+
+        class CleanupFailure:
+            def __init__(self, **kwargs):
+                self.inner = original_temporary_directory(**kwargs)
+
+            def __enter__(self):
+                return self.inner.__enter__()
+
+            def __exit__(self, *args):
+                self.inner.__exit__(*args)
+                raise OSError("simulated cleanup failure after publication")
+
+        with mock.patch.object(demo.tempfile, "TemporaryDirectory", side_effect=CleanupFailure):
+            demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertEqual(len(list(destination.iterdir())), 3)
+
     def test_publication_allowlist(self):
         approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
         self.assertEqual(
