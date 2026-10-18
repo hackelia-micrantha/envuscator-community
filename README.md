@@ -146,7 +146,7 @@ A dependency-free [synthetic customer-runner adapter example](./examples/synthet
 
 ## Validation
 
-The repository includes dependency-free validation scripts and GitHub Actions coverage.
+The repository includes dependency-free validation scripts and GitHub Actions coverage. `scripts/verify_site.py` uses standard-library `tomllib` and **requires Python 3.11+** to check the Wrangler routing contract; the separate synthetic adapter demo still supports Python 3.10+. CI enforces the site verifier's version requirement.
 
 ```sh
 python3 scripts/verify_site.py
