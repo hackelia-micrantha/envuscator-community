@@ -14,7 +14,7 @@ custom_domain = true
 
 [[routes]]
 pattern = "www.envuscator.com/*"
-zone_name = "envuscator.com"
+zone_id = "5d05984cca18412664e6a5533ca95a09"
 
 [assets]
 directory = "./web"
