@@ -5,7 +5,10 @@ from __future__ import annotations
 
 from html.parser import HTMLParser
 from pathlib import Path
-import tomllib
+try:
+    import tomllib  # Python 3.11+ standard library
+except ModuleNotFoundError as error:
+    raise SystemExit("Public site validation requires Python 3.11 or newer") from error
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
