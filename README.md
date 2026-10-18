@@ -66,8 +66,11 @@ Production metadata is published only after the production release-signing ident
 - Build step: none
 - Output directory: `web/`
 - Cloudflare configuration: [`wrangler.toml`](./wrangler.toml)
-- Production hostname: to be finalized as part of duplicate-site retirement
-- `https://envuscator.micrantha.com`: a separate historical concept/demo surface and not evidence that the complete runner-local v1 architecture is deployed
+- Primary public hostname: [`https://envuscator.com`](https://envuscator.com) (verified live October 18, 2026).
+- Public aliases: [`https://www.envuscator.com`](https://www.envuscator.com) and [`https://envuscator.micrantha.com`](https://envuscator.micrantha.com); all three serve the same `envuscator-community` Worker, **not** three distinct products or a separate concept demo.
+- Cloudflare routing: the apex and Micrantha alias are Worker Custom Domains; `www.envuscator.com/*` is an explicit Worker Route using an existing proxied CNAME. The `www` route was restored October 18 after an observed HTTP 522 and retested with HTTP 200. This Worker Route is currently external Cloudflare configuration; preserve and verify it when migrating deployment automation.
+- Deployment verification: check the public page and `/.well-known/security.txt` on every hostname. The repository is authoritative for public site **source**, while a live Cloudflare deployment is a separately qualified runtime state.
+- The legacy root static files in private `envuscator-web` are not the active Cloudflare public deployment. Their future repository cleanup is separate from public DNS cutover and must not affect entitlement-service routes.
 
 The Cloudflare Workers integration serves `web/` as static assets. This repository is the intended authoritative public documentation, signed metadata, and product surface.
 
