@@ -7,6 +7,8 @@ This is NOT the commercial Envuscator adapter, engine, crypto or a native build.
 from __future__ import annotations
 
 import argparse
+import ctypes
+import errno
 import hashlib
 import json
 import os
@@ -14,6 +16,7 @@ from pathlib import Path
 import re
 import stat
 import sys
+import tempfile
 
 MAX_BYTES = 1024 * 1024
 MAX_ENTRIES = 1024
@@ -118,6 +121,51 @@ def render(config: dict[str, bytes], build_id: str, platform: str, build_type: s
     return artifact, manifest, evidence
 
 
+def _publish_no_replace(staged: Path, output: Path) -> None:
+    """Atomically publish a complete directory, refusing an occupied destination.
+
+    Linux renameat2(RENAME_NOREPLACE) is required. Unlike rename(), it never
+    replaces even an empty destination directory. No unsafe fallback is used.
+    Both parent directories are pinned by file descriptor for the syscall.
+    """
+    source_name = os.fsencode(staged.name)
+    destination_name = os.fsencode(output.name)
+    if (not destination_name or destination_name in (b".", b"..")
+            or 0 in destination_name or 0 in source_name):
+        raise OSError(errno.EINVAL, "invalid publication directory name")
+    try:
+        libc = ctypes.CDLL(None, use_errno=True)
+        renameat2 = libc.renameat2
+    except AttributeError as error:
+        raise OSError(errno.ENOSYS, "atomic no-replace publish unavailable") from error
+    renameat2.argtypes = (ctypes.c_int, ctypes.c_char_p,
+                          ctypes.c_int, ctypes.c_char_p, ctypes.c_uint)
+    renameat2.restype = ctypes.c_int
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    source_fd = os.open(staged.parent, flags)
+    committed = False
+    try:
+        target_fd = os.open(output.parent, flags)
+        try:
+            if renameat2(source_fd, source_name,
+                         target_fd, destination_name, 1) != 0:
+                code = ctypes.get_errno()
+                raise OSError(code, os.strerror(code))
+            committed = True
+        finally:
+            try:
+                os.close(target_fd)
+            except OSError:
+                if not committed:
+                    raise
+    finally:
+        try:
+            os.close(source_fd)
+        except OSError:
+            if not committed:
+                raise
+
+
 def execute(config: Path, output: Path, build_id: str, platform: str, build_type: str) -> None:
     if not BUILD_RE.fullmatch(build_id):
         raise DemoDenied("invalid build identifier")
@@ -126,16 +174,28 @@ def execute(config: Path, output: Path, build_id: str, platform: str, build_type
     data = load_local_config(config)
     blobs = render(data, build_id, platform, build_type)
     names = ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json")
-    # Avoid overwriting unrelated customer files or following a pre-existing
-    # output-directory symlink. One new, private directory per demonstration.
+    # Stage outside the caller-controlled output parent. Incomplete artifacts
+    # never appear in the output namespace. The staging workspace must be a
+    # trusted private local temporary directory; hostile same-UID access to
+    # that workspace is outside this demonstration's isolation contract.
+    published = False
     try:
-        output.mkdir(mode=0o700, parents=False, exist_ok=False)
-        for name, blob in zip(names, blobs):
-            fd = os.open(output / name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
-            with os.fdopen(fd, "wb") as handle:
-                handle.write(blob)
+        with tempfile.TemporaryDirectory(prefix="envuscator-synthetic-") as workspace:
+            staged = Path(workspace) / "complete"
+            staged.mkdir(mode=0o700, exist_ok=False)
+            for name, blob in zip(names, blobs):
+                fd = os.open(staged / name,
+                             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+                with os.fdopen(fd, "wb") as handle:
+                    handle.write(blob)
+            # Single atomic no-clobber publication; never unlink/rmdir output.
+            _publish_no_replace(staged, output)
+            published = True
     except OSError as error:
-        raise DemoDenied("cannot create fresh private output directory") from error
+        # Publication is a commit point: cleanup failures afterward must
+        # not report failure for an already-published, complete directory.
+        if not published:
+            raise DemoDenied("cannot create complete private synthetic output") from error
 
 
 def main() -> int:
