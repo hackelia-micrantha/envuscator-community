@@ -131,48 +131,64 @@ class SyntheticContractTests(unittest.TestCase):
         self.assertEqual((artifact["platform"], artifact["build_type"]), ("ios", "Release"))
         self.assertNotIn("XCFramework", str(artifact))
 
-    def test_partial_write_failure_removes_synthetic_output(self):
+    def test_partial_write_failure_keeps_destination_absent(self):
         destination = self.root / "incomplete"
         original_open = demo.os.open
         attempted = 0
+        names = ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json")
 
-        def fail_second_artifact(path, flags, mode=0o777, **kwargs):
+        def fail_second_staged_artifact(path, flags, mode=0o777, **kwargs):
             nonlocal attempted
-            if kwargs.get("dir_fd") is not None and str(path) in ("synthetic-artifact.json", "synthetic-manifest.json", "synthetic-result.json"):
+            if Path(path).name in names:
                 attempted += 1
+                self.assertFalse(destination.exists(), "partial output must stay private")
                 if attempted == 2:
                     raise OSError("synthetic disk failure")
             return original_open(path, flags, mode, **kwargs)
 
-        with mock.patch.object(demo.os, "open", side_effect=fail_second_artifact):
+        with mock.patch.object(demo.os, "open", side_effect=fail_second_staged_artifact):
             with self.assertRaises(demo.DemoDenied):
                 demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertEqual(attempted, 2)
         self.assertFalse(destination.exists())
         self.output("incomplete")
 
-    def test_replaced_output_does_not_delete_unrelated_directory(self):
-        destination = self.root / "race-output"
-        moved = self.root / "moved-original"
+    def test_concurrent_destination_creation_never_overwrites(self):
+        destination = self.root / "raced"
+        actual_publish = demo._publish_no_replace
+
+        def competing_creator(staged, output):
+            self.assertFalse(destination.exists())
+            destination.mkdir()
+            (destination / "unrelated.txt").write_text("keep")
+            return actual_publish(staged, output)
+
+        with mock.patch.object(demo, "_publish_no_replace", side_effect=competing_creator):
+            with self.assertRaises(demo.DemoDenied):
+                demo.execute(self.config, destination, "fixture-A", "android", "Debug")
+        self.assertEqual((destination / "unrelated.txt").read_text(), "keep")
+        self.assertEqual([p.name for p in destination.iterdir()], ["unrelated.txt"])
+
+    def test_failure_never_unlinks_replacement_artifact(self):
+        destination = self.root / "raced-files"
         original_open = demo.os.open
         mutated = False
 
-        def replace_before_second_write(path, flags, mode=0o777, **kwargs):
+        def adversarial_failure(path, flags, mode=0o777, **kwargs):
             nonlocal mutated
-            if (path == "synthetic-manifest.json" and kwargs.get("dir_fd") is not None
-                    and not mutated):
+            if Path(path).name == "synthetic-manifest.json" and not mutated:
                 mutated = True
-                destination.rename(moved)
+                self.assertFalse(destination.exists())
                 destination.mkdir()
-                (destination / "unrelated.txt").write_text("keep")
-                raise OSError("synthetic race/failure")
+                (destination / "synthetic-artifact.json").write_text("unrelated")
+                raise OSError("injected staging failure")
             return original_open(path, flags, mode, **kwargs)
 
-        with mock.patch.object(demo.os, "open", side_effect=replace_before_second_write):
+        with mock.patch.object(demo.os, "open", side_effect=adversarial_failure):
             with self.assertRaises(demo.DemoDenied):
                 demo.execute(self.config, destination, "fixture-A", "android", "Debug")
         self.assertTrue(mutated)
-        self.assertEqual((destination / "unrelated.txt").read_text(), "keep")
-        self.assertEqual(list(moved.iterdir()), [])
+        self.assertEqual((destination / "synthetic-artifact.json").read_text(), "unrelated")
 
     def test_publication_allowlist(self):
         approved = {"README.md", "demo.py", "fixtures/sample.env", "tests/test_demo.py"}
