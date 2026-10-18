@@ -5,6 +5,10 @@ from __future__ import annotations
 
 from html.parser import HTMLParser
 from pathlib import Path
+try:
+    import tomllib  # Python 3.11+ standard library
+except ModuleNotFoundError as error:
+    raise SystemExit("Public site validation requires Python 3.11 or newer") from error
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -80,6 +84,19 @@ def main() -> None:
     assert COMPATIBILITY.is_file(), "docs/compatibility.md is missing"
     assert LOCAL_RUNNER.is_file(), "docs/local-runner.md is missing"
     assert SECURITY_TXT.is_file(), "web/.well-known/security.txt is missing"
+
+    # Routing is a safety contract: a future deploy must neither drop an
+    # established hostname nor capture unrelated Micrantha/Envuscator routes.
+    wrangler = tomllib.loads((ROOT / "wrangler.toml").read_text(encoding="utf-8"))
+    assert wrangler["name"] == "envuscator-community"
+    assert wrangler["assets"]["directory"] == "./web"
+    public_routes = wrangler["routes"]
+    assert len(public_routes) == 3, "public route inventory changed: review domain ownership"
+    assert {tuple(sorted(route.items())) for route in public_routes} == {
+        (("custom_domain", True), ("pattern", "envuscator.com")),
+        (("custom_domain", True), ("pattern", "envuscator.micrantha.com")),
+        (("pattern", "www.envuscator.com/*"), ("zone_id", "5d05984cca18412664e6a5533ca95a09")),
+    }, "unexpected public Worker routes: verify Cloudflare routing and DNS before merging"
 
     parser = SiteParser()
     parser.feed(INDEX.read_text(encoding="utf-8"))
