@@ -193,7 +193,7 @@ class SyntheticContractTests(unittest.TestCase):
     def test_reject_embedded_nul_without_truncated_publication(self):
         truncated_target = self.root / "victim"
         with self.assertRaises(demo.DemoDenied):
-            demo.execute(self.config, self.root / "victim\\x00suffix",
+            demo.execute(self.config, self.root / ("victim" + chr(0) + "suffix"),
                          "fixture-A", "android", "Debug")
         self.assertFalse(truncated_target.exists())
 
