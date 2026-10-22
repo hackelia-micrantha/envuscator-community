@@ -159,6 +159,10 @@ Site validation checks HTML parsing, internal fragment links, metadata, heading 
 
 Release metadata validation rejects unexpected release payloads, archive/key publication, unsafe paths, non-canonical metadata, version/target path mismatches, and statement/descriptor identity disagreement. Cryptographic signature verification remains mandatory in consumers; repository validation does not substitute for it.
 
+## Documentation maintenance
+
+Envuscator Community adopts the Micrantha shared documentation-sync process. The [project-owned maintenance contract](./docs/documentation-maintenance.md) records public/private documentation authority, validation entry points, and the separate release, signing, and Cloudflare deployment gates. A source update is not evidence of a production cutover.
+
 ## Local preview
 
 ```sh
