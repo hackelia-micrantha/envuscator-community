@@ -1,8 +1,7 @@
 # Documentation maintenance contract
 
-**Adoption:** Micrantha's shared `documentation-sync` default, unchanged.
-
-Follow the [shared documentation-sync skill](https://github.com/hackelia-micrantha/.github/blob/main/skills/documentation-sync/SKILL.md) for the review/decision process. This file records only Envuscator-specific ownership, public claim limits, validation commands, and deployment boundaries; it is not a second copy of the shared contract.
+**Adoption:** [Micrantha documentation standard](https://github.com/hackelia-micrantha/.github/blob/main/docs/standards/documentation.md), including public-claim consistency.
+ This file records only Envuscator-specific ownership, public claim limits, validation commands, and deployment boundaries; it is not a second copy of the shared contract.
 
 ## Authority and maintained surfaces
 
@@ -49,6 +48,6 @@ For release-metadata work, enforce the [public release-tree contract](../web/rel
 
 ## Recurrence and decisions
 
-Run documentation-sync after engine or adapter capability changes, compatibility decisions, signed-metadata/release transitions, security-claim changes, public/private repository changes, or Cloudflare routing/deployment changes. Prefer event-driven, project-owned updates; do not mirror private status reports or duplicate the shared skill.
+Review documentation after engine or adapter capability changes, compatibility decisions, signed-metadata/release transitions, security-claim changes, public/private repository changes, or Cloudflare routing/deployment changes. Prefer event-driven, project-owned updates; do not mirror private status reports or duplicate the shared standard.
 
-Raise material unresolved public security, release, commercial, or routing claims through the shared `DOC-Q*` human-decision queue. No additional skill specialization is currently required.
+Refer material unresolved public security, release, commercial, or routing claims to the accountable maintainer before publication.
