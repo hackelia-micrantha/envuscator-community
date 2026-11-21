@@ -159,6 +159,12 @@ def main() -> None:
     assert "Open concept demo" not in html, (
         "the Micrantha alias is not a separate concept demo"
     )
+    assert 'class="roadmap-timeline"' in html, "roadmap sequence missing"
+    assert 'datetime="2026-11-20"' in html, "roadmap update date missing"
+    assert "No public v1 launch date is committed" in html, "roadmap must disclose scheduling uncertainty"
+    assert "Source and staging progress alone do not establish production availability" in html, (
+        "roadmap must distinguish staging and source evidence from production"
+    )
     for required_copy in ("Available now", "Target v1 architecture", "In progress", "Planned"):
         assert required_copy in html, f"project-state label missing: {required_copy}"
 
