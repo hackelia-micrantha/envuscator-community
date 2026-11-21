@@ -241,16 +241,7 @@ nav a,
   color: var(--brand-dark);
 }
 
-.demo-note {
-  max-width: 48rem;
-  margin: 0.9rem 0 0;
-  color: #64748b;
-  font-size: 0.82rem;
-}
-
 .signal-grid,
-.card-grid,
-.roadmap-grid,
 .boundary-grid {
   display: grid;
   gap: 1rem;
@@ -258,8 +249,6 @@ nav a,
 }
 
 .signal-grid article,
-.card,
-.roadmap-grid article,
 .boundary,
 .architecture-flow li {
   border: 1px solid var(--line);
@@ -280,9 +269,7 @@ nav a,
 }
 
 .signal-grid p,
-.card p,
-.roadmap-grid p,
-.boundary li,
+.boundary p,
 .architecture-flow p {
   color: var(--muted);
 }
@@ -293,7 +280,7 @@ nav a,
 }
 
 .section {
-  padding: clamp(4rem, 8vw, 7rem) 0 0;
+  padding: clamp(3rem, 5vw, 5rem) 0 0;
 }
 
 .section-intro {
@@ -319,13 +306,6 @@ nav a,
   text-wrap: pretty;
 }
 
-.card {
-  min-height: 13rem;
-  padding: 1.4rem;
-}
-
-.card h3,
-.roadmap-grid h3,
 .boundary h3,
 .architecture-flow h3 {
   margin: 0.65rem 0 0;
@@ -334,24 +314,11 @@ nav a,
   letter-spacing: -0.02em;
 }
 
-.card p:last-child,
-.roadmap-grid p,
+.boundary p:last-child,
 .architecture-flow p {
   margin: 0.65rem 0 0;
   font-size: 0.92rem;
   line-height: 1.75;
-}
-
-.card-green {
-  background: linear-gradient(145deg, #edf7f1, var(--brand-mist));
-}
-
-.card-blue {
-  background: linear-gradient(145deg, #f2f6fb, var(--brand-sky));
-}
-
-.card-sand {
-  background: linear-gradient(145deg, #fffaf0, var(--brand-sand));
 }
 
 .architecture-flow {
@@ -378,19 +345,6 @@ nav a,
 
 .boundary {
   padding: 1.5rem;
-}
-
-.boundary ul {
-  margin: 1rem 0 0;
-  padding-left: 1.2rem;
-}
-
-.boundary li + li {
-  margin-top: 0.65rem;
-}
-
-.boundary li::marker {
-  color: var(--brand-leaf);
 }
 
 .trusted {
@@ -420,8 +374,7 @@ nav a,
 }
 
 .roadmap-phase,
-.roadmap-window,
-.roadmap-when {
+.roadmap-window {
   color: var(--muted);
   font-size: 0.8rem;
   font-weight: 650;
@@ -447,8 +400,7 @@ nav a,
   line-height: 1.6;
 }
 
-.roadmap-timeline .roadmap-window,
-.roadmap-grid .roadmap-when {
+.roadmap-timeline .roadmap-window {
   color: var(--brand-leaf-deep);
   font-weight: 700;
 }
@@ -468,11 +420,6 @@ nav a,
 .status.gated {
   background: var(--brand-sand);
   color: #75572a;
-}
-
-.roadmap-grid article {
-  background: var(--surface);
-  padding: 1.4rem;
 }
 
 .status {
@@ -498,7 +445,7 @@ nav a,
 .honesty {
   display: grid;
   gap: 1.5rem;
-  margin-top: clamp(4rem, 8vw, 7rem);
+  margin-top: clamp(3rem, 5vw, 5rem);
   border: 1px solid #eadfd0;
   border-radius: 2rem;
   background: linear-gradient(135deg, #fffdf8, var(--brand-sand));
@@ -540,16 +487,7 @@ footer p {
     grid-template-columns: auto minmax(0, 1fr);
   }
 
-  .signal-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .card-grid.three {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .boundary-grid,
-  .roadmap-grid,
   .roadmap-timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -571,6 +509,10 @@ footer p {
 }
 
 @media (min-width: 1000px) {
+  .signal-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .roadmap-timeline {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

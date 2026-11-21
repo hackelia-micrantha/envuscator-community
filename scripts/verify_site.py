@@ -165,7 +165,7 @@ def main() -> None:
     assert "Source and staging progress alone do not establish production availability" in html, (
         "roadmap must distinguish staging and source evidence from production"
     )
-    for required_copy in ("Available now", "Target v1 architecture", "In progress", "Planned"):
+    for required_copy in ("Project status", "Target v1 architecture", "In progress", "Planned"):
         assert required_copy in html, f"project-state label missing: {required_copy}"
 
     print("Envuscator static site validation passed")
