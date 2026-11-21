@@ -83,16 +83,50 @@
         </div>
       </section>
 
-      <section class="section" id="roadmap">
-        <div class="section-intro"><p class="eyebrow">Delivery roadmap</p><h2>The remaining work is qualification and activation around an implemented core.</h2></div>
-        <div class="roadmap-grid">
-          <article><span class="status active">Hardening</span><h3>Engine verification gates</h3><p>Linux/Android rootless JIT execution is green. Static-analysis and Android sample-consumer gates are being repaired; native iOS qualification remains separate.</p></article>
-          <article><span class="status active">Activation gated</span><h3>Provider adapters</h3><p>The shared GitHub OIDC and GitLab ID-token authorized paths are implemented internally. Public Action/Component wiring stays disabled until production service and release-trust gates pass.</p></article>
-          <article><span class="status active">Implemented foundation</span><h3>Signed distribution</h3><p>Immutable archive, checksum, signed release statement, verifier, metadata export, trust-candidate tooling, and adapter verification exist. The first real production offline signing identity and public trust are still pending.</p></article>
-          <article><span class="status active">In progress</span><h3>Commercial authority</h3><p>Provider-neutral grants, replay-safe event persistence, commercial source bindings, lifecycle mapping, and durable reconciliation exist. Authoritative Stripe network reconciliation, acquisition binding, and production route activation remain.</p></article>
-          <article><span class="status planned">Planned</span><h3>Layered expansion</h3><p>Additional composable build-specific techniques, ABI/toolchain compatibility evidence, broader property/fuzz coverage, and runtime-hooking documentation extend the existing protection model.</p></article>
-          <article><span class="status planned">Planned</span><h3>Rust orchestration</h3><p>Rust remains an incremental migration behind stable contracts and conformance tests, not a prerequisite for the first supported v1 release.</p></article>
-          <article><span class="status active">In progress</span><h3>Public verification</h3><p>This repository is the authoritative public documentation and signed-metadata surface. Remaining work includes one final public deployment, security/compatibility guidance, quickstarts, and production release metadata after signing trust is provisioned.</p></article>
+      <section class="section" id="roadmap" aria-labelledby="roadmap-heading">
+        <div class="section-intro">
+          <p class="eyebrow">Delivery roadmap</p>
+          <h2 id="roadmap-heading">From an implemented core to a verified, supported release.</h2>
+          <p>As of <time datetime="2026-11-20">20 November 2026</time>, the core runner-local engine and entitlement contracts are implemented, with Linux/Android execution qualified. The remaining milestones are production trust, end-to-end service qualification, native iOS evidence, and controlled provider activation. <strong>No public v1 launch date is committed.</strong></p>
+        </div>
+        <ol class="roadmap-timeline" aria-label="Roadmap sequence and target windows">
+          <li>
+            <span class="roadmap-phase">01 · Foundation</span>
+            <span class="status completed">Implemented</span>
+            <h3>Core and runner-local contracts</h3>
+            <p class="roadmap-window">Through November 2026</p>
+            <p>Native generation, immutable release verification, workload entitlements, and Linux/Android executable qualification establish the foundation; not a publicly activated service.</p>
+          </li>
+          <li>
+            <span class="roadmap-phase">02 · Qualification</span>
+            <span class="status active">In progress</span>
+            <h3>Trust and operational evidence</h3>
+            <p class="roadmap-window">Current · November 2026 onward</p>
+            <p>Complete offline production signing, entitlement-service end-to-end and recovery checks, security review, and supported native iOS qualification.</p>
+          </li>
+          <li>
+            <span class="roadmap-phase">03 · Controlled v1</span>
+            <span class="status gated">Release gated</span>
+            <h3>Publish and activate</h3>
+            <p class="roadmap-window">After acceptance gates · date not committed</p>
+            <p>Publish independently verifiable signed metadata, enable approved GitHub/GitLab adapter paths, and qualify production service and commercial routes separately.</p>
+          </li>
+          <li>
+            <span class="roadmap-phase">04 · Evolution</span>
+            <span class="status planned">Planned</span>
+            <h3>Extend beyond v1</h3>
+            <p class="roadmap-window">Post-v1 · not scheduled</p>
+            <p>Incremental Rust orchestration, additional layered techniques, broader platform evidence, and distinct paid local/offline licensing.</p>
+          </li>
+        </ol>
+        <p class="roadmap-note">These windows describe order and current work, not delivery estimates. Release transitions require tested artifacts, independent review, operational evidence, and separate activation approval. Source and staging progress alone do not establish production availability. See the <a href="https://github.com/hackelia-micrantha/envuscator-community/blob/main/docs/compatibility.md">compatibility and qualification matrix</a> for platform-level evidence.</p>
+        <div class="roadmap-grid" aria-label="Roadmap workstream status">
+          <article><span class="status active">Hardening</span><h3>Engine verification</h3><p class="roadmap-when">Now · qualification</p><p>Linux/Android rootless CI qualification exists. Native iOS and remaining consumer/toolchain acceptance must pass independently before claiming support.</p></article>
+          <article><span class="status active">In progress</span><h3>Production signing</h3><p class="roadmap-when">Now · offline ceremony pending</p><p>Immutable release, checksum, statement, verifier, and trust-candidate tooling exist. First production signing identity, approved trust, and signed publication are not yet complete.</p></article>
+          <article><span class="status active">In progress</span><h3>Entitlement service</h3><p class="roadmap-when">Now · staging qualification</p><p>Provider-neutral authorization and private-engine delivery are implemented. The selected managed AWS backend still requires complete staging E2E, recovery, least-privilege, and production ingress evidence before activation.</p></article>
+          <article><span class="status gated">Activation gated</span><h3>GitHub and GitLab adapters</h3><p class="roadmap-when">Next · after service and signing trust</p><p>Shared adapter paths exist internally. Public Action and Component activation depends on verified engine releases, entitlement availability, and independent consumer qualification.</p></article>
+          <article><span class="status gated">Not live</span><h3>Commercial licensing</h3><p class="roadmap-when">Before commercial launch · date not committed</p><p>Normalized grants and durable commercial reconciliation foundations exist. Production checkout, external reconciliation, and paid-route activation remain separate gates.</p></article>
+          <article><span class="status completed">Published</span><h3>Public guidance</h3><p class="roadmap-when">Available · maintained as evidence changes</p><p>Architecture, compatibility, security limitations, and runner-local guidance are public. Production signed release metadata will appear only after verified offline release signing.</p></article>
         </div>
       </section>
 
