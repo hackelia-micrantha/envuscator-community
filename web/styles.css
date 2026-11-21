@@ -487,10 +487,6 @@ footer p {
     grid-template-columns: auto minmax(0, 1fr);
   }
 
-  .signal-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
   .boundary-grid,
   .roadmap-timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -513,6 +509,10 @@ footer p {
 }
 
 @media (min-width: 1000px) {
+  .signal-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .roadmap-timeline {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
